@@ -8,7 +8,11 @@ import by.istin.android.xcore.CoreApplication;
 import by.istin.android.xcore.error.ErrorHandler;
 import by.istin.android.xcore.plugin.uil.ImageLoaderPlugin;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
+import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
+import mobi.wrt.oreader.app.clients.feedly.processor.AuthFeedlyProcessor;
+import mobi.wrt.oreader.app.clients.twitter.datasource.TwitterDataSource;
+import mobi.wrt.oreader.app.clients.twitter.processor.AuthTwitterProcessor;
 
 public class Application extends CoreApplication {
 
@@ -35,7 +39,16 @@ public class Application extends CoreApplication {
                 "Developer error",
                 "istin2007@gmail.com"
         ));
+        AuthManagerFactory.initTw("gEu05wPZ3zJTWas5bDf1Ow", "MiDej7peU8wJkf93Rsq9gt8wLiwkXNW8KYsLxFBw");
         registerAppService(new ClientsFactory());
+
+        //TWITTER
+        registerAppService(new TwitterDataSource());
+        registerAppService(new AuthTwitterProcessor());
+
+        //FEEDLY
+        registerAppService(new AuthFeedlyProcessor());
+
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .defaultDisplayImageOptions(BITMAP_DISPLAYER_OPTIONS).build();
         addPlugin(new ImageLoaderPlugin(config));

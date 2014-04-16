@@ -35,7 +35,7 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
 
         @Override
         public void performLogin(Activity activity) {
-
+            AuthActivity.get(activity, AuthManagerFactory.Type.FEEDLY);
         }
 
         @Override
