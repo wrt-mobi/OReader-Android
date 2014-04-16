@@ -1,9 +1,28 @@
 package mobi.wrt.oreader.app.clients;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
-public class ClientsFactory {
+import by.istin.android.xcore.XCoreHelper;
+import by.istin.android.xcore.utils.AppUtils;
+
+public class ClientsFactory implements XCoreHelper.IAppServiceKey {
+
+    public static final String APP_SERVICE_KEY = "oreader:clientsfactory";
+
+    public static ClientsFactory get(Context context) {
+        return AppUtils.get(context, APP_SERVICE_KEY);
+    }
+
+    public ClientsFactory() {
+
+    }
+
+    @Override
+    public String getAppServiceKey() {
+        return APP_SERVICE_KEY;
+    }
 
     public static interface IClient {
 

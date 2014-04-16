@@ -35,7 +35,7 @@ public class WizardActivity extends FragmentActivity {
     }
 
     private void performLogin(ClientsFactory.Type type) {
-        mClient = new ClientsFactory().getClient(type);
+        mClient = ClientsFactory.get(this).getClient(type);
         mClient.performLogin(this);
     }
 

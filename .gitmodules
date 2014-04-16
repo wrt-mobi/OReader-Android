@@ -1,0 +1,3 @@
+[submodule "module_android_xcore"]
+	path = module_android_xcore
+	url = https://github.com/IstiN/android_xcore.git
