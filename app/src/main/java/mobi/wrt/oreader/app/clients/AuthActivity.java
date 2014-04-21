@@ -69,11 +69,16 @@ public class AuthActivity extends ActionBarActivity implements IAuthManager.IAut
     }
 
     @Override
-    public void onError(Exception e) {
-        DialogBuilder.simple(this, getString(R.string.error), e.getMessage(), new DialogInterface.OnClickListener() {
+    public void onError(final Exception e) {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
+            public void run() {
+                DialogBuilder.simple(AuthActivity.this, getString(R.string.error), e.getMessage(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
             }
         });
     }

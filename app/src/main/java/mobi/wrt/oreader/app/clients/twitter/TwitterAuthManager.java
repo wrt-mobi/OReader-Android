@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import org.apache.http.client.methods.HttpUriRequest;
 
+import java.io.IOException;
+
 import by.istin.android.xcore.Core;
 import by.istin.android.xcore.callable.ISuccess;
 import by.istin.android.xcore.source.DataSourceRequest;
@@ -99,9 +101,17 @@ public class TwitterAuthManager implements IAuthManager {
 */
     @Override
 	public void sign(HttpUriRequest request)
-			throws Exception {
-		consumer.sign(request);
-	}
+			throws IOException {
+        try {
+            consumer.sign(request);
+        } catch (OAuthMessageSignerException e) {
+            e.printStackTrace();
+        } catch (OAuthExpectationFailedException e) {
+            e.printStackTrace();
+        } catch (OAuthCommunicationException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/*private Account getActiveUser() {
 		CustomLog.logD(TAG, "getActiveUser");

@@ -73,4 +73,8 @@ public class FeedlyApi {
     public static class Categories {
         public static final String PATH = UrlBuilder.parent(BASE).s("categories").build();
     }
+
+    public static class Subscriptions {
+        public static final String PATH = UrlBuilder.parent(BASE).s("subscriptions").build();
+    }
 }

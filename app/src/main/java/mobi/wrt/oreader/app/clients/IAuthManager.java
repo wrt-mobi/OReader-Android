@@ -5,6 +5,8 @@ import android.app.Activity;
 
 import org.apache.http.client.methods.HttpUriRequest;
 
+import java.io.IOException;
+
 import by.istin.android.xcore.callable.ISuccess;
 
 public interface IAuthManager {
@@ -22,7 +24,7 @@ public interface IAuthManager {
                     + TwitterConstants.OAUTH_VERIFIER.length());
         }
     */
-    void sign(HttpUriRequest request) throws Exception;
+    void sign(HttpUriRequest request) throws IOException;
 
     void getAuthorizationUrl(IAuthListener listener, ISuccess<String> success);
 	

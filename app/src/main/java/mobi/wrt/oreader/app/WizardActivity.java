@@ -5,7 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import by.istin.android.xcore.service.DataSourceService;
+import by.istin.android.xcore.source.DataSourceRequest;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
+import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
+import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
+import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 
 
 public class WizardActivity extends FragmentActivity {
@@ -16,6 +21,10 @@ public class WizardActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wizard);
+        DataSourceRequest dataSourceRequest = new DataSourceRequest(FeedlyApi.Subscriptions.PATH);
+        dataSourceRequest.setCacheable(false);
+        dataSourceRequest.setForceUpdateData(true);
+        DataSourceService.execute(this, dataSourceRequest, TestStringProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
     }
 
     public void onFeedlyLoginClick(View view) {
