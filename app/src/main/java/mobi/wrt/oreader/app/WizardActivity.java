@@ -21,7 +21,7 @@ public class WizardActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wizard);
-        DataSourceRequest dataSourceRequest = new DataSourceRequest(FeedlyApi.Subscriptions.PATH);
+        DataSourceRequest dataSourceRequest = new DataSourceRequest(FeedlyApi.Categories.PATH);
         dataSourceRequest.setCacheable(false);
         dataSourceRequest.setForceUpdateData(true);
         DataSourceService.execute(this, dataSourceRequest, TestStringProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);

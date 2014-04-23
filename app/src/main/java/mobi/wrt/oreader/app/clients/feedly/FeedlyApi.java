@@ -2,10 +2,11 @@ package mobi.wrt.oreader.app.clients.feedly;
 
 import by.istin.android.xcore.utils.StringUtil;
 import by.istin.android.xcore.utils.UrlBuilder;
+import mobi.wrt.oreader.app.BuildConfig;
 
 public class FeedlyApi {
 
-    public static final String BASE_PATH = "sandbox.feedly.com";
+    public static final String BASE_PATH = BuildConfig.FEEDLY_BASE_PATH;
 
     //path segments
     public static final String VERSION = "v3";
@@ -15,8 +16,8 @@ public class FeedlyApi {
     public static class Auth {
 
         public static final String REDIRECT_URI_VALUE = "http://localhost";
-        private static final String CLIENT_ID_VALUE = "sandbox";
-        private static final String CLIENT_SECRET_VALUE = "V0H9C3O75ODIXFSSX9OH";
+        private static final String CLIENT_ID_VALUE = BuildConfig.FEEDLY_CLIENT_ID_VALUE;
+        private static final String CLIENT_SECRET_VALUE = BuildConfig.FEEDLY_CLIENT_SECRET_VALUE;
 
         //params
         private static final String CLIENT_SECRET = "client_secret";
