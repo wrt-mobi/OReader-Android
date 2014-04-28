@@ -12,18 +12,23 @@ import java.io.IOException;
 import by.istin.android.xcore.CoreApplication;
 import by.istin.android.xcore.error.ErrorHandler;
 import by.istin.android.xcore.plugin.uil.ImageLoaderPlugin;
+import by.istin.android.xcore.provider.IDBContentProviderSupport;
+import by.istin.android.xcore.provider.impl.DBContentProviderFactory;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
 import by.istin.android.xcore.source.impl.http.exception.IOStatusException;
 import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
+import mobi.wrt.oreader.app.clients.feedly.FeedlyModule;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.exception.FeedlyAuthException;
 import mobi.wrt.oreader.app.clients.feedly.processor.AuthFeedlyProcessor;
 import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
+import mobi.wrt.oreader.app.clients.twitter.TwitterModule;
 import mobi.wrt.oreader.app.clients.twitter.datasource.TwitterDataSource;
 import mobi.wrt.oreader.app.clients.twitter.processor.AuthTwitterProcessor;
+import mobi.wrt.oreader.app.content.ContentProvider;
 
 public class Application extends CoreApplication {
 
@@ -70,17 +75,16 @@ public class Application extends CoreApplication {
                 }
             }
         });
-        AuthManagerFactory.initTw("gEu05wPZ3zJTWas5bDf1Ow", "MiDej7peU8wJkf93Rsq9gt8wLiwkXNW8KYsLxFBw");
+
+        IDBContentProviderSupport dbContentProvider = DBContentProviderFactory.getDefaultDBContentProvider(this, ContentProvider.ENTITIES);
+
         registerAppService(new ClientsFactory());
 
         //TWITTER
-        registerAppService(new TwitterDataSource());
-        registerAppService(new AuthTwitterProcessor());
+        TwitterModule.onCreate(this, dbContentProvider);
 
         //FEEDLY
-        registerAppService(new AuthFeedlyProcessor());
-        registerAppService(new FeedlyDataSource());
-        registerAppService(new TestStringProcessor());
+        FeedlyModule.onCreate(this, dbContentProvider);
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .defaultDisplayImageOptions(BITMAP_DISPLAYER_OPTIONS).build();
