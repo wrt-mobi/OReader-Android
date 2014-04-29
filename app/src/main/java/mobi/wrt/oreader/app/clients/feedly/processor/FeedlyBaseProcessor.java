@@ -23,4 +23,9 @@ abstract class FeedlyBaseProcessor extends AbstractGsonBatchProcessor<ContentVal
         dbConnection.delete(DBHelper.getTableName(getClazz()), null, null);
     }
 
+    @Override
+    protected void onProcessingFinish(DataSourceRequest dataSourceRequest, ContentValues[] contentValueses) {
+        super.onProcessingFinish(dataSourceRequest, contentValueses);
+        notifyChange(getHolderContext(), getClazz());
+    }
 }

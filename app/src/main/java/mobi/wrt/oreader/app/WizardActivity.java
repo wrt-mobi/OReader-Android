@@ -7,8 +7,11 @@ import android.view.View;
 
 import by.istin.android.xcore.service.DataSourceService;
 import by.istin.android.xcore.source.DataSourceRequest;
+import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
+import mobi.wrt.oreader.app.clients.feedly.FeedlyAuthManager;
+import mobi.wrt.oreader.app.clients.feedly.bo.AuthResponse;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 
@@ -21,6 +24,8 @@ public class WizardActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wizard);
+        AuthResponse authResponse = FeedlyAuthManager.getAuthResponse();
+        Log.xd(this, authResponse.toString());
         DataSourceRequest dataSourceRequest = new DataSourceRequest(FeedlyApi.Subscriptions.PATH);
         dataSourceRequest.setCacheable(false);
         dataSourceRequest.setForceUpdateData(true);

@@ -12,6 +12,8 @@ public class FeedlyApi {
     public static final String VERSION = "v3";
 
     public static final UrlBuilder BASE = UrlBuilder.https(BASE_PATH).s(VERSION);
+    public static final String DEFAULT_COUNT_VALUE = "20";
+    public static final String COUNT_PARAM = "count";
 
     public static class Auth {
 
@@ -73,9 +75,19 @@ public class FeedlyApi {
 
     public static class Categories {
         public static final String PATH = UrlBuilder.parent(BASE).s("categories").build();
+        public static final UrlBuilder CONTENTS = UrlBuilder.parent(BASE)
+                .s("streams")
+                .s("contents")
+                .param(COUNT_PARAM, DEFAULT_COUNT_VALUE)
+                //user%2Fde2328c6-dcf7-4aa4-b24c-48d79676bf63%2Fcategory%2Fmarketing
+                .param("streamId")
+                //from     continuation in response or from id in last content item
+                .param("continuation")
+                ;
     }
 
     public static class Subscriptions {
         public static final String PATH = UrlBuilder.parent(BASE).s("subscriptions").build();
     }
+
 }
