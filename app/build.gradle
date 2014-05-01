@@ -12,6 +12,7 @@ android {
         buildConfigField "String", "FEEDLY_BASE_PATH", FEEDLY_BASE_PATH
         buildConfigField "String", "FEEDLY_CLIENT_ID_VALUE", FEEDLY_CLIENT_ID_VALUE
         buildConfigField "String", "FEEDLY_CLIENT_SECRET_VALUE", FEEDLY_CLIENT_SECRET_VALUE
+        buildConfigField "String", "FLICKR_API_KEY", FLICKR_API_KEY
     }
     buildTypes {
         release {

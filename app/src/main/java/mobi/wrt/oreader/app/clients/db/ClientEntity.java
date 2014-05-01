@@ -71,6 +71,7 @@ public class ClientEntity implements BaseColumns, IGenerateID {
         contentValues.put(COUNT_AS_STRING, count > 99 ? "99+" : String.valueOf(count));
         contentValues.put(RATE, rate.ordinal());
         contentValues.put(META, meta);
+        contentValues.put(STARRED, 0);
         contentValues.put(ICON, icon);
         contentValues.put(INTERNAL_ID, internalId);
         contentValues.put(TYPE, type.name());

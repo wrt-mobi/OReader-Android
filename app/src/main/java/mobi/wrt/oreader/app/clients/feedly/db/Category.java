@@ -31,12 +31,13 @@ public class Category extends BaseEntity {
             id = generateId(dbHelper, db, dataSourceRequest, contentValues);
             contentValues.put(ID, id);
         }
+        String label = contentValues.getAsString(LABEL);
         ContentValues clientEntity = ClientEntity.create(
-                contentValues.getAsString(LABEL),
+                label,
                 contentValues.getAsInteger(COUNT),
                 ClientEntity.Rate.FOLDER,
                 META_DEFAULT_VALUE+contentValues.getAsString(ID_AS_STRING),
-                null,
+                "oreader://"+label,
                 id,
                 ClientsFactory.Type.FEEDLY);
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);

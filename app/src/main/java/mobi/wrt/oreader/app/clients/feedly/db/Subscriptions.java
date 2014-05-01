@@ -57,7 +57,15 @@ public class Subscriptions extends BaseEntity {
             id = generateId(dbHelper, db, dataSourceRequest, contentValues);
             contentValues.put(ID, id);
         }
-        ContentValues clientEntity = ClientEntity.create(contentValues.getAsString(TITLE), contentValues.getAsInteger(COUNT), ClientEntity.Rate.STREAM, META_DEFAULT_VALUE+contentValues.getAsString(ID_AS_STRING), null, id, ClientsFactory.Type.FEEDLY);
+        String title = contentValues.getAsString(TITLE);
+        ContentValues clientEntity = ClientEntity.create(
+                title,
+                contentValues.getAsInteger(COUNT),
+                ClientEntity.Rate.STREAM,
+                META_DEFAULT_VALUE+contentValues.getAsString(ID_AS_STRING),
+                "oreader://"+title,
+                id,
+                ClientsFactory.Type.FEEDLY);
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);
     }
 

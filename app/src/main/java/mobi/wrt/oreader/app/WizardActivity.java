@@ -13,7 +13,8 @@ import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyAuthManager;
 import mobi.wrt.oreader.app.clients.feedly.bo.AuthResponse;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
-import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.CategoriesProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.SubscriptionsProcessor;
 
 
 public class WizardActivity extends FragmentActivity {
@@ -25,11 +26,22 @@ public class WizardActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wizard);
         AuthResponse authResponse = FeedlyAuthManager.getAuthResponse();
-        Log.xd(this, authResponse.toString());
-        DataSourceRequest dataSourceRequest = new DataSourceRequest(FeedlyApi.Subscriptions.PATH);
-        dataSourceRequest.setCacheable(false);
-        dataSourceRequest.setForceUpdateData(true);
-        DataSourceService.execute(this, dataSourceRequest, TestStringProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+        if (authResponse != null) {
+            Log.xd(this, authResponse.toString());
+            DataSourceRequest dataSourceRequestSubscriptions = new DataSourceRequest(FeedlyApi.Subscriptions.PATH);
+            dataSourceRequestSubscriptions.setCacheable(false);
+            dataSourceRequestSubscriptions.setForceUpdateData(true);
+
+            DataSourceRequest dataSourceRequestCategories = new DataSourceRequest(FeedlyApi.Categories.PATH);
+            dataSourceRequestCategories.setCacheable(false);
+            dataSourceRequestCategories.setForceUpdateData(true);
+
+            DataSourceRequest.JoinedRequestBuilder joinedRequestBuilder = new DataSourceRequest.JoinedRequestBuilder(dataSourceRequestSubscriptions);
+            joinedRequestBuilder.setDataSource(FeedlyDataSource.APP_SERVICE_KEY);
+            joinedRequestBuilder.add(dataSourceRequestCategories, CategoriesProcessor.APP_SERVICE_KEY);
+
+            DataSourceService.execute(this, joinedRequestBuilder.build(), SubscriptionsProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+        }
     }
 
     public void onFeedlyLoginClick(View view) {

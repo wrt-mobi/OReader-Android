@@ -3,11 +3,7 @@ package mobi.wrt.oreader.app.application;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-
-import java.io.IOException;
 
 import by.istin.android.xcore.CoreApplication;
 import by.istin.android.xcore.error.ErrorHandler;
@@ -16,30 +12,16 @@ import by.istin.android.xcore.provider.IDBContentProviderSupport;
 import by.istin.android.xcore.provider.impl.DBContentProviderFactory;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
-import by.istin.android.xcore.source.impl.http.exception.IOStatusException;
-import by.istin.android.xcore.utils.Log;
-import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyModule;
-import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.exception.FeedlyAuthException;
-import mobi.wrt.oreader.app.clients.feedly.processor.AuthFeedlyProcessor;
-import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
+import mobi.wrt.oreader.app.clients.flickr.FlickrModule;
 import mobi.wrt.oreader.app.clients.twitter.TwitterModule;
-import mobi.wrt.oreader.app.clients.twitter.datasource.TwitterDataSource;
-import mobi.wrt.oreader.app.clients.twitter.processor.AuthTwitterProcessor;
 import mobi.wrt.oreader.app.content.ContentProvider;
+import mobi.wrt.oreader.app.image.CustomImageDownloader;
+import mobi.wrt.oreader.app.image.Displayers;
 
 public class Application extends CoreApplication {
-
-    public static DisplayImageOptions BITMAP_DISPLAYER_OPTIONS = new DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .delayBeforeLoading(300)
-            .cacheInMemory(true)
-            .cacheOnDisc(true)
-            .displayer(new SimpleBitmapDisplayer())
-            .build();
-
 
     @Override
     public void onCreate() {
@@ -86,8 +68,12 @@ public class Application extends CoreApplication {
         //FEEDLY
         FeedlyModule.onCreate(this, dbContentProvider);
 
+        //FLICKR
+        FlickrModule.onCreate(this, dbContentProvider);
+
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .defaultDisplayImageOptions(BITMAP_DISPLAYER_OPTIONS).build();
+                .defaultDisplayImageOptions(Displayers.BITMAP_DISPLAYER_OPTIONS)
+                .imageDownloader(new CustomImageDownloader(this)).build();
         addPlugin(new ImageLoaderPlugin(config));
     }
 }
