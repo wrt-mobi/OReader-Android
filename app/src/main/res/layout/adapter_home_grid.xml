@@ -17,19 +17,39 @@
         <TextView
             android:id="@+id/label"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:shadowColor="@android:color/darker_gray"
+            android:shadowRadius="0.2"
+            android:shadowDx="-2"
+            android:shadowDy="-2"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:padding="8dip"
+            android:background="@drawable/bg_gradient"
+            android:textColor="@android:color/white"/>
+        <View
+            android:layout_below="@id/label"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/bg_gradient_line"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_above="@id/label"
+            android:background="@drawable/bg_gradient_line"/>
         <TextView
             android:id="@+id/clientType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/label" />
+            android:layout_below="@id/label"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/clientType" />
+            android:layout_below="@id/clientType"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 </FrameLayout>

@@ -18,8 +18,6 @@ public class Displayers {
             .build();
 
     public static DisplayImageOptions BITMAP_DISPLAYER_BLUR_OPTIONS = new DisplayImageOptions.Builder().cloneFrom(BITMAP_DISPLAYER_OPTIONS)
-            .cacheInMemory(false)
-            .cacheOnDisc(false)
             .preProcessor(new BitmapProcessor() {
                 @Override
                 public Bitmap process(Bitmap bitmap) {
