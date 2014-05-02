@@ -2,7 +2,10 @@ package mobi.wrt.oreader.app.fragments;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -15,6 +18,17 @@ import mobi.wrt.oreader.app.image.Displayers;
 
 public class HomeFragment extends XListFragment {
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onViewCreated(View view) {
+        super.onViewCreated(view);
+    }
 
     @Override
     public void onListItemClick(Cursor cursor, View v, int position, long id) {

@@ -6,7 +6,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dip">
+        android:background="@drawable/bg_card"
+        >
 
         <mobi.wrt.oreader.app.view.SquareImageView
             android:id="@+id/icon"

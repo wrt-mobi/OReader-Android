@@ -8,6 +8,13 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="auto_fit"/>
+        android:padding="@dimen/activity_horizontal_margin"
+        android:verticalSpacing="@dimen/default_spacing"
+        android:horizontalSpacing="@dimen/default_spacing"
+        android:stretchMode="columnWidth"
+        android:clipToPadding="false"
+        android:drawSelectorOnTop="true"
+        android:background="#E4E4E4"
+        android:numColumns="@integer/home_column_count"/>
 
 </RelativeLayout>

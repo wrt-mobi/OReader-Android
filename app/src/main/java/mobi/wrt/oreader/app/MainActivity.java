@@ -49,11 +49,16 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment oldFragment = fragmentManager.findFragmentById(R.id.container);
         switch (position) {
             case 0:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new HomeFragment())
-                        .commit();
+                if (oldFragment != null && oldFragment instanceof HomeFragment) {
+                    return;
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, new HomeFragment())
+                            .commit();
+                }
                 break;
             default:
                 fragmentManager.beginTransaction()

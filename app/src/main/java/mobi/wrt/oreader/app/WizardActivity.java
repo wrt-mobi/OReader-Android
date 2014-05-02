@@ -41,6 +41,8 @@ public class WizardActivity extends FragmentActivity {
             joinedRequestBuilder.add(dataSourceRequestCategories, CategoriesProcessor.APP_SERVICE_KEY);
 
             DataSourceService.execute(this, joinedRequestBuilder.build(), SubscriptionsProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+        } else {
+            Log.xd(this, "is not logged");
         }
     }
 

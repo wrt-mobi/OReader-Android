@@ -58,12 +58,13 @@ public class Subscriptions extends BaseEntity {
             contentValues.put(ID, id);
         }
         String title = contentValues.getAsString(TITLE);
+        String visualUrl = contentValues.getAsString(VISUAL_URL);
         ContentValues clientEntity = ClientEntity.create(
                 title,
                 contentValues.getAsInteger(COUNT),
                 ClientEntity.Rate.STREAM,
                 META_DEFAULT_VALUE+contentValues.getAsString(ID_AS_STRING),
-                "oreader://"+title,
+                StringUtil.isEmpty(visualUrl) ? "oreader://"+title : visualUrl,
                 id,
                 ClientsFactory.Type.FEEDLY);
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);

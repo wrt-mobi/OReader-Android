@@ -1,0 +1,5 @@
+<resources>
+
+    <integer name="home_column_count">2</integer>
+
+</resources>
