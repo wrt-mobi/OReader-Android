@@ -67,8 +67,7 @@ public class ClientEntity implements BaseColumns, IGenerateID {
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put(TITLE, title);
-        contentValues.put(COUNT, count);
-        contentValues.put(COUNT_AS_STRING, count > 99 ? "99+" : String.valueOf(count));
+        updateCount(contentValues, count);
         contentValues.put(RATE, rate.ordinal());
         contentValues.put(META, meta);
         contentValues.put(STARRED, 0);
@@ -76,5 +75,10 @@ public class ClientEntity implements BaseColumns, IGenerateID {
         contentValues.put(INTERNAL_ID, internalId);
         contentValues.put(TYPE, type.name());
         return contentValues;
+    }
+
+    public static void updateCount(ContentValues contentValues, int count) {
+        contentValues.put(COUNT, count);
+        contentValues.put(COUNT_AS_STRING, count > 99 ? "99+" : String.valueOf(count));
     }
 }

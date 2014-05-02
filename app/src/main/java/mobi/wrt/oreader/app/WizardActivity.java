@@ -3,6 +3,7 @@ package mobi.wrt.oreader.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateUtils;
 import android.view.View;
 
 import by.istin.android.xcore.service.DataSourceService;
@@ -14,7 +15,9 @@ import mobi.wrt.oreader.app.clients.feedly.FeedlyAuthManager;
 import mobi.wrt.oreader.app.clients.feedly.bo.AuthResponse;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.processor.CategoriesProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.MarkersProcessor;
 import mobi.wrt.oreader.app.clients.feedly.processor.SubscriptionsProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 
 
 public class WizardActivity extends FragmentActivity {
@@ -36,9 +39,15 @@ public class WizardActivity extends FragmentActivity {
             dataSourceRequestCategories.setCacheable(false);
             dataSourceRequestCategories.setForceUpdateData(true);
 
+            DataSourceRequest dataSourceRequestMarkers = new DataSourceRequest(FeedlyApi.Markers.PATH);
+            dataSourceRequestMarkers.setCacheable(true);
+            dataSourceRequestMarkers.setCacheExpiration(2* DateUtils.HOUR_IN_MILLIS);
+            dataSourceRequestMarkers.setForceUpdateData(true);
+
             DataSourceRequest.JoinedRequestBuilder joinedRequestBuilder = new DataSourceRequest.JoinedRequestBuilder(dataSourceRequestSubscriptions);
             joinedRequestBuilder.setDataSource(FeedlyDataSource.APP_SERVICE_KEY);
             joinedRequestBuilder.add(dataSourceRequestCategories, CategoriesProcessor.APP_SERVICE_KEY);
+            joinedRequestBuilder.add(dataSourceRequestMarkers, MarkersProcessor.APP_SERVICE_KEY);
 
             DataSourceService.execute(this, joinedRequestBuilder.build(), SubscriptionsProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
         } else {

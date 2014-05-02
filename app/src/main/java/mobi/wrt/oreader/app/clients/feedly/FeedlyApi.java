@@ -90,4 +90,8 @@ public class FeedlyApi {
         public static final String PATH = UrlBuilder.parent(BASE).s("subscriptions").build();
     }
 
+    public static class Markers {
+        public static final String PATH = UrlBuilder.parent(BASE).s("markers").s("counts").build();
+    }
+
 }

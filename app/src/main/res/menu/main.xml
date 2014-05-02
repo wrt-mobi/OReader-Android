@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="mobi.wrt.oreader.app.MainActivity" >
     <item android:id="@+id/action_example"
-        android:title="@string/action_example"
+        android:title="@string/action_style"
         app:showAsAction="withText|ifRoom" />
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item android:id="@+id/action_unread_visibility"
+        android:title="@string/action_unread_visibility"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>
