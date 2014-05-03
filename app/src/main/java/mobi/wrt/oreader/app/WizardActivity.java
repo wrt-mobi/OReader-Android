@@ -9,6 +9,7 @@ import android.view.View;
 import by.istin.android.xcore.service.DataSourceService;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.Log;
+import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyAuthManager;
@@ -44,10 +45,17 @@ public class WizardActivity extends FragmentActivity {
             dataSourceRequestMarkers.setCacheExpiration(2* DateUtils.HOUR_IN_MILLIS);
             dataSourceRequestMarkers.setForceUpdateData(true);
 
+            DataSourceRequest dataSourceRequestFeed = new DataSourceRequest(FeedlyApi.Streams.CONTENTS.build("user/de2328c6-dcf7-4aa4-b24c-48d79676bf63/category/Технологии", "true", StringUtil.EMPTY));
+            dataSourceRequestFeed.setCacheable(true);
+            dataSourceRequestFeed.setCacheExpiration(2* DateUtils.HOUR_IN_MILLIS);
+            dataSourceRequestFeed.setForceUpdateData(true);
+
             DataSourceRequest.JoinedRequestBuilder joinedRequestBuilder = new DataSourceRequest.JoinedRequestBuilder(dataSourceRequestSubscriptions);
             joinedRequestBuilder.setDataSource(FeedlyDataSource.APP_SERVICE_KEY);
             joinedRequestBuilder.add(dataSourceRequestCategories, CategoriesProcessor.APP_SERVICE_KEY);
             joinedRequestBuilder.add(dataSourceRequestMarkers, MarkersProcessor.APP_SERVICE_KEY);
+            joinedRequestBuilder.add(dataSourceRequestFeed, TestStringProcessor.APP_SERVICE_KEY);
+
 
             DataSourceService.execute(this, joinedRequestBuilder.build(), SubscriptionsProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
         } else {

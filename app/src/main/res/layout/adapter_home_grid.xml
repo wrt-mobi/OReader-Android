@@ -47,9 +47,12 @@
 
         <TextView
             android:id="@+id/count"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/white"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_counter"
             android:layout_below="@id/clientType"
+            android:layout_marginTop="8dp"
             />
 
     </RelativeLayout>

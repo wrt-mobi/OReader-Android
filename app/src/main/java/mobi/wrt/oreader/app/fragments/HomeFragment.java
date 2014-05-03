@@ -1,6 +1,7 @@
 package mobi.wrt.oreader.app.fragments;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -32,7 +33,7 @@ public class HomeFragment extends XListFragment {
 
     @Override
     public void onListItemClick(Cursor cursor, View v, int position, long id) {
-
+        DatabaseUtils.dumpCurrentRow(cursor);
     }
 
     @Override

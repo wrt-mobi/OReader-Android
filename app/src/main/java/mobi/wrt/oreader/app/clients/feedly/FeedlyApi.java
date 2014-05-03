@@ -75,13 +75,18 @@ public class FeedlyApi {
 
     public static class Categories {
         public static final String PATH = UrlBuilder.parent(BASE).s("categories").build();
+    }
+
+    public static class Streams {
+        public static final String STREAM_ID = "streamId";
         public static final UrlBuilder CONTENTS = UrlBuilder.parent(BASE)
                 .s("streams")
                 .s("contents")
                 .param(COUNT_PARAM, DEFAULT_COUNT_VALUE)
-                //user%2Fde2328c6-dcf7-4aa4-b24c-48d79676bf63%2Fcategory%2Fmarketing
-                .param("streamId")
-                //from     continuation in response or from id in last content item
+                        //user%2Fde2328c6-dcf7-4aa4-b24c-48d79676bf63%2Fcategory%2Fmarketing
+                .param(STREAM_ID)
+                .param("unreadOnly")
+                        //from     continuation in response or from id in last content item
                 .param("continuation")
                 ;
     }

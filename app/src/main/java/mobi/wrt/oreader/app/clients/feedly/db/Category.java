@@ -2,10 +2,13 @@ package mobi.wrt.oreader.app.clients.feedly.db;
 
 import android.content.ContentValues;
 
+import org.json.JSONObject;
+
 import by.istin.android.xcore.annotations.dbInteger;
 import by.istin.android.xcore.annotations.dbString;
 import by.istin.android.xcore.db.IDBConnection;
 import by.istin.android.xcore.db.impl.DBHelper;
+import by.istin.android.xcore.model.JSONModel;
 import by.istin.android.xcore.source.DataSourceRequest;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
@@ -42,4 +45,5 @@ public class Category extends BaseEntity {
                 ClientsFactory.Type.FEEDLY);
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);
     }
+
 }
