@@ -2,19 +2,17 @@ package mobi.wrt.oreader.app.clients.feedly.processor;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import by.istin.android.xcore.db.impl.DBHelper;
 import by.istin.android.xcore.processor.impl.AbstractGsonProcessor;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.ContentUtils;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
-import mobi.wrt.oreader.app.clients.feedly.db.Category;
-import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
+import mobi.wrt.oreader.app.clients.feedly.db.Content;
 
 public class MarkersProcessor extends AbstractGsonProcessor<MarkersProcessor.Response> {
 
@@ -51,10 +49,10 @@ public class MarkersProcessor extends AbstractGsonProcessor<MarkersProcessor.Res
         } else {
             if (entities != null && !entities.isEmpty()) {
                 for (ContentValues values : entities) {
-                    String internalId = values.getAsString(ClientEntity.META);
+                    Uri meta = Uri.parse(values.getAsString(ClientEntity.META));
                     Response.Marker found = null;
                     for (Response.Marker marker : unreadcounts) {
-                        if (internalId.endsWith(marker.id)) {
+                        if (meta.getQueryParameter(Content.ID_AS_STRING).equals(marker.id)) {
                             found = marker;
                             ClientEntity.updateCount(values, marker.count);
                             break;

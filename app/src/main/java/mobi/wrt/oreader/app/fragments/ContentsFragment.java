@@ -40,6 +40,21 @@ public class ContentsFragment extends XListFragment {
     }
 
     @Override
+    public String getDataSourceKey() {
+        return mContentsFragmentConnector.getDataSourceKey(getMeta());
+    }
+
+    @Override
+    public String getSelection() {
+        return mContentsFragmentConnector.getSelection(getMeta());
+    }
+
+    @Override
+    public String[] getSelectionArgs() {
+        return mContentsFragmentConnector.getSelectionArgs(getMeta());
+    }
+
+    @Override
     public int getViewLayout() {
         return R.layout.fragment_contens;
     }
@@ -77,7 +92,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected int[] getAdapterControlIds() {
-        return new int[]{R.id.icon, R.id.label, R.id.clientType, R.id.count};
+        return new int[]{R.id.label};
     }
 
     @Override
@@ -87,11 +102,16 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected int getAdapterLayout() {
-        return R.layout.adapter_home_grid;
+        return R.layout.adapter_content;
     }
 
+    private Uri mMeta;
+
     public Uri getMeta() {
-        return getArguments().getParcelable(ClientEntity.META);
+        if (mMeta == null) {
+            mMeta = getArguments().getParcelable(ClientEntity.META);
+        }
+        return mMeta;
     }
 
     public String getType() {

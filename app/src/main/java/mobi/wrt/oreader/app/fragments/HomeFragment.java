@@ -1,19 +1,19 @@
 package mobi.wrt.oreader.app.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
+import by.istin.android.xcore.utils.CursorUtils;
 import mobi.wrt.oreader.app.R;
+import mobi.wrt.oreader.app.StreamActivity;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.image.Displayers;
 
@@ -33,7 +33,10 @@ public class HomeFragment extends XListFragment {
 
     @Override
     public void onListItemClick(Cursor cursor, View v, int position, long id) {
-        DatabaseUtils.dumpCurrentRow(cursor);
+        Intent intent = new Intent(getActivity(), StreamActivity.class);
+        intent.putExtra(ClientEntity.META, CursorUtils.getString(ClientEntity.META, cursor));
+        intent.putExtra(ClientEntity.TYPE, CursorUtils.getString(ClientEntity.TYPE, cursor));
+        startActivity(intent);
     }
 
     @Override

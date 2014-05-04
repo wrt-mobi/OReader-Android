@@ -49,6 +49,12 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
             boolean isPagingSupport(Uri meta);
 
             void onPageLoad(Uri meta, int newPage, int totalItemCount);
+
+            String getDataSourceKey(Uri meta);
+
+            String getSelection(Uri meta);
+
+            String[] getSelectionArgs(Uri meta);
         }
     }
 

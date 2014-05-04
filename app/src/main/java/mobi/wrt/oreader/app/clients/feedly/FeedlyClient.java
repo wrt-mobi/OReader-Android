@@ -9,7 +9,7 @@ import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.AuthActivity;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
-import mobi.wrt.oreader.app.clients.db.ClientEntity;
+import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
 import mobi.wrt.oreader.app.clients.feedly.processor.ContentProcessor;
 
@@ -34,7 +34,7 @@ public class FeedlyClient implements ClientsFactory.IClient {
 
         @Override
         public String getUrl(Uri meta) {
-            return FeedlyApi.Streams.CONTENTS.build(meta.getQueryParameter(Content.ID_AS_STRING), "true", StringUtil.EMPTY);
+            return FeedlyApi.Streams.CONTENTS.build(StringUtil.encode(meta.getQueryParameter(Content.ID_AS_STRING)), "true", StringUtil.EMPTY);
         }
 
         @Override
@@ -44,7 +44,7 @@ public class FeedlyClient implements ClientsFactory.IClient {
 
         @Override
         public String[] getAdapterColumns(Uri meta) {
-            return new String[]{ClientEntity.ICON, ClientEntity.TITLE, ClientEntity.TYPE, ClientEntity.COUNT_AS_STRING};
+            return new String[]{Content.TITLE};
         }
 
         @Override
@@ -65,6 +65,21 @@ public class FeedlyClient implements ClientsFactory.IClient {
         @Override
         public void onPageLoad(Uri meta, int newPage, int totalItemCount) {
 
+        }
+
+        @Override
+        public String getDataSourceKey(Uri meta) {
+            return FeedlyDataSource.APP_SERVICE_KEY;
+        }
+
+        @Override
+        public String getSelection(Uri meta) {
+            return Content.STREAM_ID + "=?";
+        }
+
+        @Override
+        public String[] getSelectionArgs(Uri meta) {
+            return new String[]{meta.getQueryParameter(Content.ID_AS_STRING)};
         }
     }
 
