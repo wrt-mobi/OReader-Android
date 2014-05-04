@@ -6,15 +6,12 @@ import com.google.gson.annotations.SerializedName;
 
 import by.istin.android.xcore.annotations.JsonSubJSONObject;
 import by.istin.android.xcore.annotations.dbBoolean;
-import by.istin.android.xcore.annotations.dbInteger;
 import by.istin.android.xcore.annotations.dbLong;
 import by.istin.android.xcore.annotations.dbString;
 import by.istin.android.xcore.db.IDBConnection;
 import by.istin.android.xcore.db.impl.DBHelper;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.HashUtils;
-import mobi.wrt.oreader.app.clients.ClientsFactory;
-import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 
 /**
@@ -69,6 +66,8 @@ public class Content extends BaseEntity {
             contentValues.put(ID, id);
         }
         contentValues.put(STREAM_ID, dataSourceRequest.getParam(FeedlyApi.Streams.STREAM_ID));
+
+        //TODO need to recognize type of content text/image with text/images with text/video and text/audio with text and prepare fields for view
     }
 
 }

@@ -17,6 +17,7 @@ import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
 import by.istin.android.xcore.utils.Holder;
 import by.istin.android.xcore.utils.StringUtil;
+import mobi.wrt.oreader.app.clients.Meta;
 import mobi.wrt.oreader.app.clients.flickr.FlickrApi;
 import mobi.wrt.oreader.app.clients.flickr.processor.PhotosSearchProcessor;
 
@@ -29,7 +30,7 @@ public class CustomImageDownloader extends BaseImageDownloader {
     @Override
     public InputStream getStream(String imageUri, Object extra) throws IOException {
         Uri uri = Uri.parse(imageUri);
-        if (uri.getScheme().equals("oreader")) {
+        if (uri.getScheme().equals(Meta.SCHEME_VALUE)) {
             final Holder<PhotosSearchProcessor.Response> responseHolder = new Holder<PhotosSearchProcessor.Response>();
             Core.ExecuteOperationBuilder<PhotosSearchProcessor.Response> executeOperationBuilder = new Core.ExecuteOperationBuilder<PhotosSearchProcessor.Response>();
             String host = uri.getHost();

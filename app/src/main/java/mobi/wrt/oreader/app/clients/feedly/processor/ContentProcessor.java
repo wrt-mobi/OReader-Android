@@ -2,28 +2,24 @@ package mobi.wrt.oreader.app.clients.feedly.processor;
 
 import android.content.ContentValues;
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import by.istin.android.xcore.db.IDBConnection;
 import by.istin.android.xcore.db.impl.DBHelper;
+import by.istin.android.xcore.model.ParcelableModel;
 import by.istin.android.xcore.processor.impl.AbstractGsonBatchProcessor;
 import by.istin.android.xcore.provider.IDBContentProviderSupport;
 import by.istin.android.xcore.source.DataSourceRequest;
-import mobi.wrt.oreader.app.clients.ClientsFactory;
-import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
-import mobi.wrt.oreader.app.clients.feedly.db.Category;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
 
 /**
  * Created by Uladzimir_Klyshevich on 4/28/2014.
  */
-//TODO writ junit test
 public class ContentProcessor extends AbstractGsonBatchProcessor<ContentProcessor.Response> {
 
     public static final String APP_SERVICE_KEY = "feedly:processor:content";
 
-    public static class Response implements Parcelable {
+    public static class Response extends ParcelableModel {
 
         private ContentValues[] items;
 
@@ -39,20 +35,20 @@ public class ContentProcessor extends AbstractGsonBatchProcessor<ContentProcesso
 
         };
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
         public Response(final Parcel source) {
-            items = (ContentValues[]) source.readParcelableArray(ContentValues.class.getClassLoader());
+            items = readContentValuesArray(source);
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelableArray(items, 0);
+            writeContentValuesArray(dest, items);
+        }
+
+        public ContentValues[] getItems() {
+            return items;
         }
     }
+
     public ContentProcessor(IDBContentProviderSupport contentProviderSupport) {
         super(Content.class, ContentProcessor.Response.class, contentProviderSupport);
     }

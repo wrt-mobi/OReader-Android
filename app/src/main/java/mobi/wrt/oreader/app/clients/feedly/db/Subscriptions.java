@@ -15,6 +15,7 @@ import by.istin.android.xcore.gson.GsonPrimitiveJoinerConverter;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
+import mobi.wrt.oreader.app.clients.Meta;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 
 /**
@@ -47,8 +48,6 @@ public class Subscriptions extends BaseEntity {
     @dbInteger
     public static final String COUNT = "count";
 
-    public static final String META_DEFAULT_VALUE = "subscription";
-
     @Override
     public void onBeforeListUpdate(DBHelper dbHelper, IDBConnection db, DataSourceRequest dataSourceRequest, int position, ContentValues contentValues) {
         super.onBeforeListUpdate(dbHelper, db, dataSourceRequest, position, contentValues);
@@ -59,12 +58,18 @@ public class Subscriptions extends BaseEntity {
         }
         String title = contentValues.getAsString(TITLE);
         String visualUrl = contentValues.getAsString(VISUAL_URL);
+
+        String meta = Meta.buildMeta(ClientsFactory.Type.FEEDLY.name())
+                .param(Meta.DB_ENTITY, DBHelper.getTableName(Subscriptions.class))
+                .param(ID_AS_STRING, contentValues.getAsString(ID_AS_STRING))
+                .build();
+
         ContentValues clientEntity = ClientEntity.create(
                 title,
                 contentValues.getAsInteger(COUNT),
                 ClientEntity.Rate.STREAM,
-                META_DEFAULT_VALUE+contentValues.getAsString(ID_AS_STRING),
-                StringUtil.isEmpty(visualUrl) ? "oreader://"+title : visualUrl,
+                meta,
+                StringUtil.isEmpty(visualUrl) ? Meta.buildImageUrl(title) : visualUrl,
                 id,
                 ClientsFactory.Type.FEEDLY);
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);
