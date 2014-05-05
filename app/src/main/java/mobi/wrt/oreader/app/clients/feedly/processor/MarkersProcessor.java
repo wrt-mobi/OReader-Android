@@ -10,6 +10,7 @@ import java.util.List;
 import by.istin.android.xcore.processor.impl.AbstractGsonProcessor;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.ContentUtils;
+import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
@@ -52,7 +53,9 @@ public class MarkersProcessor extends AbstractGsonProcessor<MarkersProcessor.Res
                     Uri meta = Uri.parse(values.getAsString(ClientEntity.META));
                     Response.Marker found = null;
                     for (Response.Marker marker : unreadcounts) {
-                        if (meta.getQueryParameter(Content.ID_AS_STRING).equals(marker.id)) {
+                        String idAsString = meta.getQueryParameter(Content.ID_AS_STRING);
+                        String markerId = marker.id;
+                        if (idAsString.endsWith(markerId)) {
                             found = marker;
                             ClientEntity.updateCount(values, marker.count);
                             break;
@@ -67,6 +70,7 @@ public class MarkersProcessor extends AbstractGsonProcessor<MarkersProcessor.Res
             }
         }
         ContentUtils.putEntities(context, ClientEntity.class, entities);
+        notifyChange(context, ClientEntity.class);
     }
 
     @Override

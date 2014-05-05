@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import by.istin.android.xcore.XCoreHelper;
+import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.utils.AppUtils;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyClient;
 
@@ -48,7 +49,7 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
 
             boolean isPagingSupport(Uri meta);
 
-            void onPageLoad(Uri meta, int newPage, int totalItemCount);
+            void onPageLoad(XListFragment listFragment, Uri meta, int newPage, int totalItemCount);
 
             String getDataSourceKey(Uri meta);
 

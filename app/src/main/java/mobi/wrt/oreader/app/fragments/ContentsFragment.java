@@ -40,6 +40,11 @@ public class ContentsFragment extends XListFragment {
     }
 
     @Override
+    public long getCacheExpiration() {
+        return 1l;
+    }
+
+    @Override
     public String getDataSourceKey() {
         return mContentsFragmentConnector.getDataSourceKey(getMeta());
     }
@@ -82,7 +87,7 @@ public class ContentsFragment extends XListFragment {
     @Override
     protected void onPageLoad(int newPage, int totalItemCount) {
         super.onPageLoad(newPage, totalItemCount);
-        mContentsFragmentConnector.onPageLoad(getMeta(), newPage, totalItemCount);
+        mContentsFragmentConnector.onPageLoad(this, getMeta(), newPage, totalItemCount);
     }
 
     @Override
@@ -92,7 +97,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected int[] getAdapterControlIds() {
-        return new int[]{R.id.label};
+        return new int[]{R.id.label, R.id.description};
     }
 
     @Override

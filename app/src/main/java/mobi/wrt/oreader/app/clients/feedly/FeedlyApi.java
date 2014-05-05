@@ -3,6 +3,7 @@ package mobi.wrt.oreader.app.clients.feedly;
 import by.istin.android.xcore.utils.StringUtil;
 import by.istin.android.xcore.utils.UrlBuilder;
 import mobi.wrt.oreader.app.BuildConfig;
+import mobi.wrt.oreader.app.clients.feedly.db.Content;
 
 public class FeedlyApi {
 
@@ -79,15 +80,17 @@ public class FeedlyApi {
 
     public static class Streams {
         public static final String STREAM_ID = "streamId";
+        public static final String CONTINUATION = "continuation";
         public static final UrlBuilder CONTENTS = UrlBuilder.parent(BASE)
                 .s("streams")
                 .s("contents")
                 .param(COUNT_PARAM, DEFAULT_COUNT_VALUE)
-                        //user%2Fde2328c6-dcf7-4aa4-b24c-48d79676bf63%2Fcategory%2Fmarketing
-                .param(STREAM_ID, true)
+                .param(STREAM_ID)
                 .param("unreadOnly")
+                //local param to sort items
+                .param(Content._COUNT)
                         //from     continuation in response or from id in last content item
-                .param("continuation")
+                .param(CONTINUATION)
                 ;
     }
 

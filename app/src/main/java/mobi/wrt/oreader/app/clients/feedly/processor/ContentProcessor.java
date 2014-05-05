@@ -9,6 +9,7 @@ import by.istin.android.xcore.model.ParcelableModel;
 import by.istin.android.xcore.processor.impl.AbstractGsonBatchProcessor;
 import by.istin.android.xcore.provider.IDBContentProviderSupport;
 import by.istin.android.xcore.source.DataSourceRequest;
+import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
 
@@ -63,7 +64,11 @@ public class ContentProcessor extends AbstractGsonBatchProcessor<ContentProcesso
     @Override
     protected void onStartProcessing(DataSourceRequest dataSourceRequest, IDBConnection dbConnection) {
         super.onStartProcessing(dataSourceRequest, dbConnection);
-        dbConnection.delete(DBHelper.getTableName(Content.class), Content.STREAM_ID + "=?", new String[]{dataSourceRequest.getParam(FeedlyApi.Streams.STREAM_ID)});
+        String streamId = dataSourceRequest.getParam(FeedlyApi.Streams.STREAM_ID);
+        String continuation = dataSourceRequest.getParam(FeedlyApi.Streams.CONTINUATION);
+        if (StringUtil.isEmpty(continuation)) {
+            dbConnection.delete(DBHelper.getTableName(Content.class), Content.STREAM_ID + "=?", new String[]{streamId});
+        }
     }
 
     @Override
