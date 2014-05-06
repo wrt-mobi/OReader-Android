@@ -16,6 +16,7 @@ import by.istin.android.xcore.callable.ISuccess;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
 import by.istin.android.xcore.utils.Holder;
+import by.istin.android.xcore.utils.Log;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.Meta;
 import mobi.wrt.oreader.app.clients.flickr.FlickrApi;
@@ -59,6 +60,7 @@ public class CustomImageDownloader extends BaseImageDownloader {
             PhotosSearchProcessor.Response.Photo photo = photos.get(new Random().nextInt(photos.size()));
             imageUri = StringUtil.format(FlickrApi.Photos.PHOTO_URL, photo.getFarm().toString(), photo.getServer(), photo.getId(), photo.getSecret());
         }
+        Log.xd(this, "imgurl:"+imageUri);
         return super.getStream(imageUri, extra);
     }
 

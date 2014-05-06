@@ -12,4 +12,6 @@
 
     <dimen name="tab_host_default_height">48dp</dimen>
 
+    <dimen name="image_thumbs_height">64dp</dimen>
+
 </resources>

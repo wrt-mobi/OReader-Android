@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
+import java.util.List;
+
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
 import by.istin.android.xcore.utils.CursorUtils;
@@ -15,6 +17,7 @@ import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
 import mobi.wrt.oreader.app.clients.feedly.processor.ContentProcessor;
+import mobi.wrt.oreader.app.image.IContentImage;
 
 public class FeedlyClient implements ClientsFactory.IClient {
 
@@ -47,7 +50,7 @@ public class FeedlyClient implements ClientsFactory.IClient {
 
         @Override
         public String[] getAdapterColumns(Uri meta) {
-            return new String[]{Content.TITLE, Content.STRIP_CONTENT};
+            return new String[]{Content.TITLE, Content.IMAGES, Content.STRIP_CONTENT};
         }
 
         @Override
@@ -86,6 +89,11 @@ public class FeedlyClient implements ClientsFactory.IClient {
         @Override
         public String[] getSelectionArgs(Uri meta) {
             return new String[]{meta.getQueryParameter(Content.ID_AS_STRING)};
+        }
+
+        @Override
+        public List<IContentImage> getImagesFromContent(Cursor cursor) {
+            return Content.getImages(cursor);
         }
     }
 

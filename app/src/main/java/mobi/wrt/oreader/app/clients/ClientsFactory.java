@@ -3,12 +3,16 @@ package mobi.wrt.oreader.app.clients;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+
+import java.util.List;
 
 import by.istin.android.xcore.XCoreHelper;
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.utils.AppUtils;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyClient;
+import mobi.wrt.oreader.app.image.IContentImage;
 
 public class ClientsFactory implements XCoreHelper.IAppServiceKey {
 
@@ -56,6 +60,8 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
             String getSelection(Uri meta);
 
             String[] getSelectionArgs(Uri meta);
+
+            List<IContentImage> getImagesFromContent(Cursor cursor);
         }
     }
 

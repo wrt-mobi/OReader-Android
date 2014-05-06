@@ -4,12 +4,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 
 import by.istin.android.xcore.fragment.XListFragment;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
+import mobi.wrt.oreader.app.view.ImagesViewGroup;
 
 public class ContentsFragment extends XListFragment {
 
@@ -97,7 +99,26 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected int[] getAdapterControlIds() {
-        return new int[]{R.id.label, R.id.description};
+        return new int[]{R.id.label, R.id.imagesViewGroup, R.id.description};
+    }
+
+    @Override
+    protected SimpleCursorAdapter.ViewBinder getAdapterViewBinder() {
+        return new SimpleCursorAdapter.ViewBinder() {
+
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                if (view.getId() == R.id.imagesViewGroup) {
+                    ImagesViewGroup imagesViewGroup = (ImagesViewGroup) view;
+                    //TODO make configurable
+                    imagesViewGroup.setDisplayMode(ImagesViewGroup.DisplayMode.CROP);
+                    imagesViewGroup.setSrc(mContentsFragmentConnector.getImagesFromContent(cursor));
+                    return true;
+                }
+                return false;
+            }
+
+        };
     }
 
     @Override

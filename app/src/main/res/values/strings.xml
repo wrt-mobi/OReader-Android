@@ -5,6 +5,11 @@
 
     <string name="twitter">Twitter</string>
 
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="repeat">Repeat</string>
+    <string name="error">Ooops!</string>
+
     <string name="title_home">Home</string>
     <string name="title_connect">Connect</string>
     <string name="title_settings">Settings</string>
@@ -17,6 +22,6 @@
     <string name="action_unread_visibility">Hide read</string>
     <string name="title_activity_wizard">WizardActivity</string>
 
-    <string name="error">Ooops!</string>
+
 
 </resources>
