@@ -1,6 +1,7 @@
 package mobi.wrt.oreader.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import mobi.wrt.oreader.app.fragments.HomeFragment;
 import mobi.wrt.oreader.app.fragments.NavigationDrawerFragment;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MainActivity extends ActionBarActivity
@@ -44,6 +46,11 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
     @Override

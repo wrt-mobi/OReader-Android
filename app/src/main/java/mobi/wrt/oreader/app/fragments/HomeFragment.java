@@ -6,8 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.Random;
 
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
@@ -63,6 +66,21 @@ public class HomeFragment extends XListFragment {
     protected boolean setAdapterViewImage(ImageView v, String value) {
         ImageLoader.getInstance().displayImage(value, v, Displayers.BITMAP_DISPLAYER_BLUR_OPTIONS);
         return true;
+    }
+
+    private static final int[] COLORS = {0xffF3B500,0xffFF0605, 0xff2811FD, 0xff3FB4B3, 0xffCB4437};
+
+    private Random random = new Random();
+
+    @Override
+    protected boolean setAdapterViewText(TextView v, String value) {
+        if (v.getId() == R.id.label) {
+            v.setText(value.toUpperCase());
+            v.setBackgroundColor(COLORS[random.nextInt(COLORS.length-1)]);
+            return true;
+        } else {
+            return super.setAdapterViewText(v, value);
+        }
     }
 
     @Override

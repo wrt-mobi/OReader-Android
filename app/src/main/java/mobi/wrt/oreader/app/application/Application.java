@@ -20,12 +20,14 @@ import mobi.wrt.oreader.app.clients.twitter.TwitterModule;
 import mobi.wrt.oreader.app.content.ContentProvider;
 import mobi.wrt.oreader.app.image.CustomImageDownloader;
 import mobi.wrt.oreader.app.image.Displayers;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class Application extends CoreApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
+        CalligraphyConfig.initDefault("fonts/RobotoCondensed-Regular.ttf");
         registerAppService(new HttpAndroidDataSource(
                         new HttpAndroidDataSource.DefaultHttpRequestBuilder(),
                         new HttpAndroidDataSource.DefaultResponseStatusHandler())
