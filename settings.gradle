@@ -1,1 +1,1 @@
-include ':app', 'module_android_xcore:xcore-library:xcore'
+include ':app', 'module_android_xcore:xcore-library:xcore', ':module_animated_expandable_list_view'

@@ -43,7 +43,8 @@ public class Category extends BaseEntity {
                 meta,
                 Meta.buildImageUrl(label),
                 id,
-                ClientsFactory.Type.FEEDLY);
+                ClientsFactory.Type.FEEDLY,
+                null);
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);
     }
 

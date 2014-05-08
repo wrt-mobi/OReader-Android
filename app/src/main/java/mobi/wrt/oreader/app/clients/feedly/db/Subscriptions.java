@@ -62,6 +62,7 @@ public class Subscriptions extends BaseEntity {
         String meta = Meta.buildMeta(ClientsFactory.Type.FEEDLY.name())
                 .param(Meta.DB_ENTITY, DBHelper.getTableName(Subscriptions.class))
                 .param(ID_AS_STRING, contentValues.getAsString(ID_AS_STRING))
+                .param(WEBSITE, contentValues.getAsString(WEBSITE))
                 .build();
 
         ContentValues clientEntity = ClientEntity.create(
@@ -71,7 +72,8 @@ public class Subscriptions extends BaseEntity {
                 meta,
                 StringUtil.isEmpty(visualUrl) ? Meta.buildImageUrl(title) : visualUrl,
                 id,
-                ClientsFactory.Type.FEEDLY);
+                ClientsFactory.Type.FEEDLY,
+                contentValues.getAsString(CATEGORIES_JOINED));
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);
     }
 

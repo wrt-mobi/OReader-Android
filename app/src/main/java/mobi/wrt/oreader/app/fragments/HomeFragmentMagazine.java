@@ -15,13 +15,12 @@ import java.util.Random;
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
 import by.istin.android.xcore.utils.CursorUtils;
-import by.istin.android.xcore.utils.UiUtil;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.StreamActivity;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.image.Displayers;
 
-public class HomeFragment extends XListFragment {
+public class HomeFragmentMagazine extends XListFragment {
 
 
     @Override
@@ -45,7 +44,7 @@ public class HomeFragment extends XListFragment {
 
     @Override
     public int getViewLayout() {
-        return R.layout.fragment_home;
+        return R.layout.fragment_home_magazine;
     }
 
     @Override

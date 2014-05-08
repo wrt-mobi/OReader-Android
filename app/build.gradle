@@ -33,6 +33,7 @@ dependencies {
 
     compile files('../module_android_xcore/download/uil-xcore-plugin.jar')
     compile project(':module_android_xcore:xcore-library:xcore')
+    compile project(':module_animated_expandable_list_view')
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
     compile 'org.jsoup:jsoup:1.7.3'

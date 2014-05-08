@@ -11,6 +11,7 @@ import by.istin.android.xcore.db.entity.IGenerateID;
 import by.istin.android.xcore.db.impl.DBHelper;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.HashUtils;
+import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 
 public class ClientEntity implements BaseColumns, IGenerateID {
@@ -50,6 +51,9 @@ public class ClientEntity implements BaseColumns, IGenerateID {
     @dbString
     public static final String TYPE = "type";
 
+    @dbString
+    public static final String CATEGORIES = "categories";
+
     @Override
     public long generateId(DBHelper dbHelper, IDBConnection db, DataSourceRequest dataSourceRequest, ContentValues contentValues) {
         String type = contentValues.getAsString(TYPE);
@@ -61,7 +65,7 @@ public class ClientEntity implements BaseColumns, IGenerateID {
         return HashUtils.generateId(type, internalId);
     }
 
-    public static ContentValues create(String title, Integer count, Rate rate, String meta, String icon, Long internalId, ClientsFactory.Type type) {
+    public static ContentValues create(String title, Integer count, Rate rate, String meta, String icon, Long internalId, ClientsFactory.Type type, String categories) {
         if (count == null) {
             count = 0;
         }
@@ -74,6 +78,7 @@ public class ClientEntity implements BaseColumns, IGenerateID {
         contentValues.put(ICON, icon);
         contentValues.put(INTERNAL_ID, internalId);
         contentValues.put(TYPE, type.name());
+        contentValues.put(CATEGORIES, StringUtil.isEmpty(categories) ? null : categories);
         return contentValues;
     }
 

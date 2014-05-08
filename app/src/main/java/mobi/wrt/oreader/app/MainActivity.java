@@ -2,20 +2,20 @@ package mobi.wrt.oreader.app;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
 
-import mobi.wrt.oreader.app.fragments.HomeFragment;
+import mobi.wrt.oreader.app.fragments.HomeFragmentExpandableListView;
 import mobi.wrt.oreader.app.fragments.NavigationDrawerFragment;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -59,11 +59,11 @@ public class MainActivity extends ActionBarActivity
         Fragment oldFragment = fragmentManager.findFragmentById(R.id.container);
         switch (position) {
             case 0:
-                if (oldFragment != null && oldFragment instanceof HomeFragment) {
+                if (oldFragment != null && oldFragment instanceof HomeFragmentExpandableListView) {
                     return;
                 } else {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, new HomeFragment())
+                            .replace(R.id.container, new HomeFragmentExpandableListView())
                             .commit();
                 }
                 break;

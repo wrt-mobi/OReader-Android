@@ -1,5 +1,11 @@
 package mobi.wrt.oreader.app.clients.feedly.processor;
 
+import android.content.ContentValues;
+
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+
 import by.istin.android.xcore.db.IDBConnection;
 import by.istin.android.xcore.db.impl.DBHelper;
 import by.istin.android.xcore.provider.IDBContentProviderSupport;
@@ -29,6 +35,12 @@ public class SubscriptionsProcessor extends FeedlyBaseProcessor {
         dbConnection.delete(DBHelper.getTableName(ClientEntity.class),
                 ClientEntity.TYPE + "=? AND " + ClientEntity.META + " like ?",
                 new String[]{ClientsFactory.Type.FEEDLY.name(), META_FILTER+"%"});
+    }
+
+    @Override
+    protected ContentValues[] process(Gson gson, BufferedReader bufferedReader) {
+        ContentValues[] result = super.process(gson, bufferedReader);
+        return result;
     }
 
     @Override

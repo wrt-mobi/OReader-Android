@@ -41,7 +41,11 @@ public class FastBlur {
         if (canReuseInBitmap) {
             bitmap = sentBitmap;
         } else {
-            bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+            Bitmap.Config config = sentBitmap.getConfig();
+            if (config == null) {
+                config = Bitmap.Config.RGB_565;
+            }
+            bitmap = sentBitmap.copy(config, true);
         }
 
         if (radius < 1) {

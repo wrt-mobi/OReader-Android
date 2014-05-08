@@ -27,7 +27,7 @@ public class Application extends CoreApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        CalligraphyConfig.initDefault("fonts/RobotoCondensed-Regular.ttf");
+        CalligraphyConfig.initDefault("fonts/Roboto-Light.ttf");
         registerAppService(new HttpAndroidDataSource(
                         new HttpAndroidDataSource.DefaultHttpRequestBuilder(),
                         new HttpAndroidDataSource.DefaultResponseStatusHandler())

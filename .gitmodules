@@ -1,3 +1,6 @@
 [submodule "module_android_xcore"]
 	path = module_android_xcore
 	url = https://github.com/IstiN/android_xcore.git
+[submodule "module_animated_expandable_list_view"]
+	path = module_animated_expandable_list_view
+	url = https://github.com/IstiN/AnimatedExpandableListView.git
