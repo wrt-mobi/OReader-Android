@@ -21,7 +21,7 @@ public class Displayers {
             .preProcessor(new BitmapProcessor() {
                 @Override
                 public Bitmap process(Bitmap bitmap) {
-                    return FastBlur.doBlur(bitmap, 10, false);
+                    return FastBlur.doBlur(bitmap, 50, false);
                 }
             })
             .build();

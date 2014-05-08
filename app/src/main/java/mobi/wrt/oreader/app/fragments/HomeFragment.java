@@ -15,6 +15,7 @@ import java.util.Random;
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
 import by.istin.android.xcore.utils.CursorUtils;
+import by.istin.android.xcore.utils.UiUtil;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.StreamActivity;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
