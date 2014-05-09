@@ -6,8 +6,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.ListView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XListFragment;
+import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
@@ -34,6 +42,44 @@ public class ContentsFragment extends XListFragment {
         setRetainInstance(true);
         mClient = ClientsFactory.get(getActivity()).getClient(ClientsFactory.Type.valueOf(getType()));
         mContentsFragmentConnector = mClient.getContentsFragmentConnector(getMeta());
+    }
+
+    private int headerHeightMin = ContextHolder.get().getResources().getDimensionPixelSize(R.dimen.contents_header_height_min);
+
+    @Override
+    public void onViewCreated(View view) {
+        super.onViewCreated(view);
+        final ListView listView = (ListView) view.findViewById(android.R.id.list);
+        final View headerView = View.inflate(getActivity(), R.layout.view_fake_header, null);
+        listView.addHeaderView(headerView, null, false);
+        final View floatHeaderView = view.findViewById(R.id.header);
+        ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
+        ImageLoader.getInstance().displayImage("http://www.desktopict.com/wp-content/uploads/2014/02/great-wallpapers-for-android-2-1024x576.jpg", headerImageView);
+        setOnScrollListViewListener(new AbsListView.OnScrollListener() {
+
+            private int last;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int bottom = headerView.getBottom();
+                Log.xd(ContentsFragment.this, "top " + headerView.getTop() + " bottom " + bottom);
+                int bottomValue = bottom - view.getPaddingTop();
+                if (last == bottomValue) {
+                    return;
+                }
+                if (bottomValue >= headerHeightMin) {
+                    last = bottomValue;
+                    ViewGroup.LayoutParams layoutParams = floatHeaderView.getLayoutParams();
+                    layoutParams.height = bottomValue;
+                    floatHeaderView.setLayoutParams(layoutParams);
+                }
+            }
+        });
     }
 
     @Override

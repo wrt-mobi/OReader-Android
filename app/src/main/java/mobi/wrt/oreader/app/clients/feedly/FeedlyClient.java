@@ -70,7 +70,8 @@ public class FeedlyClient implements ClientsFactory.IClient {
 
         @Override
         public void onPageLoad(XListFragment listFragment, Uri meta, int newPage, int totalItemCount) {
-            Cursor cursor = (Cursor) listFragment.getListAdapter().getItem(totalItemCount - 1);
+            int realAdapterCount = XListFragment.getRealAdapterCount(listFragment.getListAdapter());
+            Cursor cursor = (Cursor) listFragment.getListAdapter().getItem(realAdapterCount - 1);
             String continuation = CursorUtils.getString(Content.ID_AS_STRING, cursor);
             String url = FeedlyApi.Streams.CONTENTS.build(StringUtil.encode(meta.getQueryParameter(Content.ID_AS_STRING)), "true", String.valueOf(totalItemCount), continuation);
             listFragment.loadData(listFragment.getActivity(), url, getUrl(meta));
