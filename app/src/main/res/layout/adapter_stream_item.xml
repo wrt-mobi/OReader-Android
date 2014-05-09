@@ -4,21 +4,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <mobi.wrt.oreader.app.view.SymbolImageView
-        android:id="@+id/icon"
+    <RelativeLayout
+        android:id="@+id/firstSymbol"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="4dip"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/symbolBg"
+            android:layout_width="@dimen/symbol_size"
+            android:layout_height="@dimen/symbol_size" />
+
+        <TextView
+            android:id="@+id/symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+            android:textSize="24sp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/counts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dip"
-        />
+        android:layout_marginLeft="2dip"
+        android:layout_toRightOf="@id/label"
+        style="@style/Counts"/>
+
     <TextView
-        android:paddingTop="12dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="7dp"
         android:id="@+id/label"
-        android:layout_toRightOf="@id/icon"
+        android:layout_toRightOf="@id/firstSymbol"
         android:textSize="18sp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:paddingLeft="2dip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
 </RelativeLayout>

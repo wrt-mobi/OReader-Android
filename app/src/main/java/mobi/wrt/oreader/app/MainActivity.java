@@ -2,6 +2,7 @@ package mobi.wrt.oreader.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,13 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.HomeFragmentExpandableListView;
 import mobi.wrt.oreader.app.fragments.NavigationDrawerFragment;
+import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        IClientEntityClick{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -63,7 +67,7 @@ public class MainActivity extends ActionBarActivity
                     return;
                 } else {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, new HomeFragmentExpandableListView())
+                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(false))
                             .commit();
                 }
                 break;
@@ -123,6 +127,14 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClientEntityClick(String meta, String type) {
+        Intent intent = new Intent(this, StreamActivity.class);
+        intent.putExtra(ClientEntity.META, meta);
+        intent.putExtra(ClientEntity.TYPE, type);
+        startActivity(intent);
     }
 
     /**

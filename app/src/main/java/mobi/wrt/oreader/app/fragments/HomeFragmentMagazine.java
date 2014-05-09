@@ -1,6 +1,5 @@
 package mobi.wrt.oreader.app.fragments;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,8 +15,8 @@ import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
 import by.istin.android.xcore.utils.CursorUtils;
 import mobi.wrt.oreader.app.R;
-import mobi.wrt.oreader.app.StreamActivity;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
+import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
 import mobi.wrt.oreader.app.image.Displayers;
 
 public class HomeFragmentMagazine extends XListFragment {
@@ -36,10 +35,9 @@ public class HomeFragmentMagazine extends XListFragment {
 
     @Override
     public void onListItemClick(Cursor cursor, View v, int position, long id) {
-        Intent intent = new Intent(getActivity(), StreamActivity.class);
-        intent.putExtra(ClientEntity.META, CursorUtils.getString(ClientEntity.META, cursor));
-        intent.putExtra(ClientEntity.TYPE, CursorUtils.getString(ClientEntity.TYPE, cursor));
-        startActivity(intent);
+        String meta = CursorUtils.getString(ClientEntity.META, cursor);
+        String type = CursorUtils.getString(ClientEntity.TYPE, cursor);
+        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type);
     }
 
     @Override

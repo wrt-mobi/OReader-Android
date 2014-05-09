@@ -6,12 +6,12 @@
 
             <corners android:radius="2dp" />
 
-            <solid android:color="#CB4437" />
+            <solid android:color="#30000000" />
 
-            <padding android:bottom="4dp"
-                android:left="@dimen/default_spacing"
-                android:right="@dimen/default_spacing"
-                android:top="4dp" />
+            <padding android:bottom="2dp"
+                android:left="2dp"
+                android:right="2dp"
+                android:top="2dp" />
         </shape>
     </item>
 </layer-list>
