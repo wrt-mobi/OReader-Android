@@ -16,7 +16,7 @@
     <dimen name="symbol_size">36dip</dimen>
     <dimen name="counts_width">20dp</dimen>
 
-    <dimen name="contents_header_height">160dip</dimen>
-    <dimen name="contents_header_height_min">68dip</dimen>
+    <dimen name="contents_header_height">176dip</dimen>
+    <dimen name="contents_header_height_min">96dip</dimen>
 
 </resources>

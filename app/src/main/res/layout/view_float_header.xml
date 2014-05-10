@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/contents_header_height"
+    tools:showIn="@layout/fragment_contens">
+
+    <ImageView
+        android:id="@+id/headerBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/bottomBackground"
+        android:layout_width="match_parent"
+        android:layout_height="28dip"
+        android:background="@color/white_main_background"
+        android:layout_alignParentBottom="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="54dip"
+        android:background="@drawable/bg_gradient"
+        android:layout_above="@id/bottomBackground" />
+
+    <RelativeLayout
+        android:id="@+id/firstSymbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/symbolBg"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+             />
+
+        <TextView
+            android:id="@+id/symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/firstSymbol"
+        android:id="@+id/tabs"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="NEWS"
+            android:paddingRight="8dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="YOUTUBE"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="TWITTER"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+        android:textSize="28sp"
+        android:paddingTop="4dip"
+        android:textColor="@android:color/white"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_above="@id/tabs"
+        android:layout_toRightOf="@id/firstSymbol" />
+</RelativeLayout>

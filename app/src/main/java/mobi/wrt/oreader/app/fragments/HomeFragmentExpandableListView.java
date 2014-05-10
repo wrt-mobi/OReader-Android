@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,10 +33,10 @@ import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
 import mobi.wrt.oreader.app.image.Displayers;
+import mobi.wrt.oreader.app.view.SymbolViewUtils;
 
 public class HomeFragmentExpandableListView extends XFragment {
 
-    public static final int DEFAULT_COLOR = 0xffCB4437;
     private AnimatedExpandableListView mListView;
     private ExpandableListAdapter mAdapter;
 
@@ -99,7 +98,8 @@ public class HomeFragmentExpandableListView extends XFragment {
                 ContentValues contentValues = mAdapter.getChild(groupPosition, childPosition);
                 String meta = contentValues.getAsString(ClientEntity.META);
                 String type = contentValues.getAsString(ClientEntity.TYPE);
-                findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type);
+                String title = contentValues.getAsString(ClientEntity.TITLE);
+                findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type, title);
                 return true;
             }
         });
@@ -293,30 +293,6 @@ public class HomeFragmentExpandableListView extends XFragment {
             ImageLoader.getInstance().displayImage(uri, imageView, Displayers.BITMAP_DISPLAYER_ICON_BG, this);
         }
 
-        public void updateTextColor(View view, Bitmap bitmap) {
-            int pixel = bitmap.getPixel(0, 0);
-            updateTextColor(view, pixel);
-        }
-
-        public void updateTextColor(View view, int pixel) {
-            if (view == null) {
-                return;
-            }
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent == null) {
-                return;
-            }
-            TextView symbolView = (TextView) parent.findViewById(R.id.symbol);
-            if (symbolView == null) {
-                return;
-            }
-            int green = Color.green(pixel);
-            int blue = Color.blue(pixel);
-            int red = Color.red(pixel);
-            double y = 0.2126*red + 0.7152*green + 0.0722*blue;
-            symbolView.setTextColor(y < 128 ? Color.WHITE : Color.BLACK);
-        }
-
         @Override
         public int getRealChildrenCount(int groupPosition) {
             ExpandableCursorModel group = getGroup(groupPosition);
@@ -393,19 +369,19 @@ public class HomeFragmentExpandableListView extends XFragment {
 
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-            updateTextColor(view, DEFAULT_COLOR);
-            view.setBackgroundColor(DEFAULT_COLOR);
+            SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+            view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
         }
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            updateTextColor(view, DEFAULT_COLOR);
-            view.setBackgroundColor(DEFAULT_COLOR);
+            SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+            view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
         }
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            updateTextColor(view, loadedImage);
+            SymbolViewUtils.updateTextColor(view, loadedImage);
         }
 
         @Override

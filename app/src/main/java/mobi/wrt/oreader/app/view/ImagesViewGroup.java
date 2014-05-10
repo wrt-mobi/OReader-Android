@@ -95,6 +95,10 @@ public class ImagesViewGroup extends RelativeLayout {
                 params = initBigImage(containerWidth, contentImage, imageView);
                 addView(imageView, params);
             } else {
+                //TODO remove when will multi image support
+                if (true) {
+                    return;
+                }
                 if (thumbnailContainer == null) {
                     LinearLayout linearLayout = new LinearLayout(getContext());
                     linearLayout.setOrientation(LinearLayout.HORIZONTAL);

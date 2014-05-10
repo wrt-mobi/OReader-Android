@@ -130,10 +130,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onClientEntityClick(String meta, String type) {
+    public void onClientEntityClick(String meta, String type, String title) {
         Intent intent = new Intent(this, StreamActivity.class);
         intent.putExtra(ClientEntity.META, meta);
         intent.putExtra(ClientEntity.TYPE, type);
+        intent.putExtra(ClientEntity.TITLE, title);
         startActivity(intent);
     }
 

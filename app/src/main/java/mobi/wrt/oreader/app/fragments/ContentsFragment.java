@@ -1,6 +1,7 @@
 package mobi.wrt.oreader.app.fragments;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,24 +9,31 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XListFragment;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
+import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
+import mobi.wrt.oreader.app.image.Displayers;
 import mobi.wrt.oreader.app.view.FloatHeaderScrollListener;
 import mobi.wrt.oreader.app.view.ImagesViewGroup;
+import mobi.wrt.oreader.app.view.SymbolViewUtils;
 
 public class ContentsFragment extends XListFragment {
 
-    public static Fragment newInstance(String meta, String type) {
+    public static Fragment newInstance(String meta, String type, String title) {
         Fragment fragment = new ContentsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ClientEntity.META, Uri.parse(meta));
         args.putString(ClientEntity.TYPE, type);
+        args.putString(ClientEntity.TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,9 +60,48 @@ public class ContentsFragment extends XListFragment {
         final View headerView = View.inflate(getActivity(), R.layout.view_fake_header, null);
         listView.addHeaderView(headerView, null, false);
         final View floatHeaderView = view.findViewById(R.id.header);
+        initHeader(floatHeaderView);
         ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
-        ImageLoader.getInstance().displayImage("http://www.desktopict.com/wp-content/uploads/2014/02/great-wallpapers-for-android-2-1024x576.jpg", headerImageView);
+        ImageLoader.getInstance().displayImage("https://pbs.twimg.com/profile_banners/816653/1398816318/1500x500", headerImageView);
         setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, headerHeight, headerHeightMin));
+    }
+
+    private void initHeader(View floatHeaderView) {
+        String title = getTitle();
+        TextView labelView = (TextView) floatHeaderView.findViewById(R.id.label);
+        labelView.setText(title.substring(1));
+        ((TextView) floatHeaderView.findViewById(R.id.symbol)).setText(title.substring(0, 1));
+
+        Uri meta = getMeta();
+        String encode = meta.getQueryParameter(Subscriptions.WEBSITE);
+        Uri parse = Uri.parse(encode);
+        String uri = parse.getScheme() + "://"+parse.getHost() +"/favicon.ico";
+        ImageView imageView = (ImageView) floatHeaderView.findViewById(R.id.symbolBg);
+        ImageLoader.getInstance().displayImage(uri, imageView, Displayers.BITMAP_DISPLAYER_ICON_BG, new SimpleImageLoadingListener() {
+
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+                view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+                view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                SymbolViewUtils.updateTextColor(view, loadedImage);
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+
+        });
     }
 
     @Override
@@ -84,7 +131,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     public int getViewLayout() {
-        return R.layout.fragment_contens;
+        return R.layout.fragment_contents;
     }
 
     @Override
@@ -163,5 +210,9 @@ public class ContentsFragment extends XListFragment {
 
     public String getType() {
         return getArguments().getString(ClientEntity.TYPE);
+    }
+
+    public String getTitle() {
+        return getArguments().getString(ClientEntity.TITLE);
     }
 }

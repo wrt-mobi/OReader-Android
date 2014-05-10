@@ -37,7 +37,8 @@ public class HomeFragmentMagazine extends XListFragment {
     public void onListItemClick(Cursor cursor, View v, int position, long id) {
         String meta = CursorUtils.getString(ClientEntity.META, cursor);
         String type = CursorUtils.getString(ClientEntity.TYPE, cursor);
-        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type);
+        String title = CursorUtils.getString(ClientEntity.TITLE, cursor);
+        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type, title);
     }
 
     @Override
