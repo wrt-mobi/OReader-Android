@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.L;
 
 import by.istin.android.xcore.CoreApplication;
 import by.istin.android.xcore.error.ErrorHandler;
@@ -27,6 +28,7 @@ public class Application extends CoreApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        L.disableLogging();
         CalligraphyConfig.initDefault("fonts/Roboto-Light.ttf");
         registerAppService(new HttpAndroidDataSource(
                         new HttpAndroidDataSource.DefaultHttpRequestBuilder(),

@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,7 +17,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XListFragment;
-import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
@@ -45,6 +46,7 @@ public class ContentsFragment extends XListFragment {
     }
 
     private int headerHeightMin = ContextHolder.get().getResources().getDimensionPixelSize(R.dimen.contents_header_height_min);
+    private int headerHeight = ContextHolder.get().getResources().getDimensionPixelSize(R.dimen.contents_header_height);
 
     @Override
     public void onViewCreated(View view) {
@@ -57,7 +59,11 @@ public class ContentsFragment extends XListFragment {
         ImageLoader.getInstance().displayImage("http://www.desktopict.com/wp-content/uploads/2014/02/great-wallpapers-for-android-2-1024x576.jpg", headerImageView);
         setOnScrollListViewListener(new AbsListView.OnScrollListener() {
 
-            private int last;
+            private int currentTopMargin;
+
+            private int lastVisibleItem = -1;
+
+            private boolean isShortVariantShown = false;
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -66,17 +72,93 @@ public class ContentsFragment extends XListFragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int bottom = headerView.getBottom();
-                Log.xd(ContentsFragment.this, "top " + headerView.getTop() + " bottom " + bottom);
-                int bottomValue = bottom - view.getPaddingTop();
-                if (last == bottomValue) {
-                    return;
+                if (lastVisibleItem == -1) {
+                    lastVisibleItem = firstVisibleItem;
                 }
-                if (bottomValue >= headerHeightMin) {
-                    last = bottomValue;
-                    ViewGroup.LayoutParams layoutParams = floatHeaderView.getLayoutParams();
-                    layoutParams.height = bottomValue;
-                    floatHeaderView.setLayoutParams(layoutParams);
+                try {
+                    if (lastVisibleItem <= firstVisibleItem) {
+                        //scroll to bottom
+                        if (firstVisibleItem == 0) {
+                            //full header visible
+                            int bottom = headerView.getBottom();
+                            int bottomValue = bottom - view.getPaddingTop();
+                            int topMargin = firstVisibleItem == 0 ? -(headerHeight - bottomValue) : -headerHeight;
+                            if (isShortVariantShown && topMargin < currentTopMargin) {
+                                return;
+                            }
+                            isShortVariantShown = false;
+                            updateHeaderMargin(topMargin, false);
+                        } else {
+                            //header is not visible can ignore or hide if shown short variant of header
+                            if (isShortVariantShown && lastVisibleItem == firstVisibleItem) {
+                                return;
+                            }
+                            isShortVariantShown = false;
+                            int topMargin = -headerHeight;
+                            updateHeaderMargin(topMargin, true);
+                        }
+                    } else {
+                        //scroll to top
+                        if (firstVisibleItem > 0) {
+                            //show short variant
+                            isShortVariantShown = true;
+                            int topMargin = headerHeightMin - headerHeight;
+                            updateHeaderMargin(topMargin, true);
+                        } else {
+                            //full header visible
+                            int bottom = headerView.getBottom();
+                            int bottomValue = bottom - view.getPaddingTop();
+                            int topMargin = firstVisibleItem == 0 ? -(headerHeight - bottomValue) : -headerHeight;
+                            if (isShortVariantShown && topMargin < currentTopMargin) {
+                                return;
+                            }
+                            isShortVariantShown = false;
+                            updateHeaderMargin(topMargin, false);
+                        }
+                    }
+                } finally {
+                    lastVisibleItem = firstVisibleItem;
+                }
+            }
+
+            private Animation currentAnimation;
+
+            public void updateHeaderMargin(final int newTopMargin, final boolean isAnimate) {
+                try {
+                    if (currentTopMargin == newTopMargin) {
+                        return;
+                    }
+                    if (currentAnimation != null) {
+                        currentAnimation.cancel();
+                        currentAnimation = null;
+                    }
+                    int abs = Math.abs(currentTopMargin + (-newTopMargin));
+                    if (!isAnimate || abs < headerHeightMin) {
+                        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) floatHeaderView.getLayoutParams();
+                        layoutParams.topMargin = newTopMargin;
+                        floatHeaderView.setLayoutParams(layoutParams);
+                        return;
+                    }
+                    currentAnimation = new Animation() {
+
+                        @Override
+                        protected void applyTransformation(float interpolatedTime, Transformation t) {
+                            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) floatHeaderView.getLayoutParams();
+                            if (isAnimate) {
+                                int newValue = (int) ((newTopMargin - layoutParams.topMargin) * interpolatedTime);
+                                layoutParams.topMargin = layoutParams.topMargin + newValue;
+                            } else {
+                                layoutParams.topMargin = (int) (newTopMargin * interpolatedTime);
+                            }
+                            floatHeaderView.setLayoutParams(layoutParams);
+                        }
+                    };
+                    if (isAnimate) {
+                        currentAnimation.setDuration(300l);
+                    }
+                    floatHeaderView.startAnimation(currentAnimation);
+                } finally {
+                    currentTopMargin = newTopMargin;
                 }
             }
         });

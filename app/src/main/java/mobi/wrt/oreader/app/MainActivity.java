@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity
                     return;
                 } else {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(false))
+                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(true))
                             .commit();
                 }
                 break;

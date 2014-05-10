@@ -96,12 +96,14 @@ public class Content extends BaseEntity {
         }
         String summaryContent = contentValues.getAsString(SUMMARY_CONTENT);
         Log.startAction("htmlContentParse");
-        Document document = Jsoup.parse(summaryContent);
-        Elements imgs = document.select("img");
-        //TODO create images view that will draw 1+ images
-        //TODO create Image interface with height width and url
-        contentValues.put(STRIP_CONTENT, stripHtml(summaryContent));
-        contentValues.put(IMAGES, imgs.toString());
+        if (!StringUtil.isEmpty(summaryContent)) {
+            Document document = Jsoup.parse(summaryContent);
+            Elements imgs = document.select("img");
+            //TODO create images view that will draw 1+ images
+            //TODO create Image interface with height width and url
+            contentValues.put(STRIP_CONTENT, stripHtml(summaryContent));
+            contentValues.put(IMAGES, imgs.toString());
+        }
         Log.endAction("htmlContentParse");
         //TODO need to recognize type of content text/image with text/images with text/video and text/audio with text and prepare fields for view
     }

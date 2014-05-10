@@ -299,7 +299,14 @@ public class HomeFragmentExpandableListView extends XFragment {
         }
 
         public void updateTextColor(View view, int pixel) {
-            TextView symbolView = (TextView) ((ViewGroup) view.getParent()).findViewById(R.id.symbol);
+            if (view == null) {
+                return;
+            }
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent == null) {
+                return;
+            }
+            TextView symbolView = (TextView) parent.findViewById(R.id.symbol);
             if (symbolView == null) {
                 return;
             }

@@ -11,10 +11,10 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:dividerHeight="12dip"
+        android:divider="@android:color/transparent"
         android:clipToPadding="false"
-        android:drawSelectorOnTop="true"
-        android:background="#E4E4E4"
-        />
+        android:drawSelectorOnTop="true" />
 
     <RelativeLayout
         android:id="@+id/header"
@@ -25,25 +25,105 @@
             android:id="@+id/headerBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
-        <TextView
+            android:scaleType="centerCrop" />
+
+        <View
+            android:id="@+id/bottomBackground"
+            android:layout_width="match_parent"
+            android:layout_height="28dip"
+            android:background="@color/white_main_background"
+            android:layout_alignParentBottom="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="54dip"
+            android:background="@drawable/bg_gradient"
+            android:layout_above="@id/bottomBackground" />
+
+        <RelativeLayout
+            android:id="@+id/firstSymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/symbolBg"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:id="@+id/symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+                android:textSize="40sp"
+                android:textColor="@android:color/white"
+                android:text="D"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Header text"
-            android:layout_alignParentBottom="true"
-            android:textColor="@android:color/black"/>
+            android:layout_toRightOf="@id/firstSymbol"
+            android:id="@+id/tabs"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:text="NEWS"
+                android:paddingRight="8dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:text="YOUTUBE"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:text="TWITTER"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
+            android:textSize="28sp"
+            android:paddingTop="4dip"
+            android:textColor="@android:color/white"
+            android:layout_above="@id/tabs"
+            android:text="roider"
+            android:layout_toRightOf="@id/firstSymbol" />
     </RelativeLayout>
 
     <ProgressBar
         android:id="@android:id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
+
     <ProgressBar
         android:id="@android:id/secondaryProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>
