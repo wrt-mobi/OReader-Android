@@ -106,7 +106,6 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     public void onListItemClick(Cursor cursor, View v, int position, long id) {
-
     }
 
     @Override

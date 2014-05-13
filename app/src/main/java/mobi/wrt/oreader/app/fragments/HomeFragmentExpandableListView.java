@@ -376,6 +376,9 @@ public class HomeFragmentExpandableListView extends XFragment {
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
             SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+            if (view == null) {
+                return;
+            }
             view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
         }
 

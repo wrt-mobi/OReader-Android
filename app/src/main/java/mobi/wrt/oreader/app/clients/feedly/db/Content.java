@@ -28,6 +28,7 @@ import by.istin.android.xcore.utils.Log;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 import mobi.wrt.oreader.app.image.IContentImage;
+import mobi.wrt.oreader.app.utils.MediaContentRecognizer;
 
 /**
  * Created by Uladzimir_Klyshevich on 4/28/2014.
@@ -41,6 +42,11 @@ public class Content extends BaseEntity {
     @JsonSubJSONObject
     @SerializedName("summary:content")
     public static final String SUMMARY_CONTENT = "summary_content";
+
+    @dbString
+    @JsonSubJSONObject
+    @SerializedName("content:content")
+    public static final String CONTENT_CONTENT = "content_content";
 
     @dbString
     @JsonSubJSONObject
@@ -95,20 +101,20 @@ public class Content extends BaseEntity {
             contentValues.put(ID, id);
         }
         String summaryContent = contentValues.getAsString(SUMMARY_CONTENT);
+        String contentContent = contentValues.getAsString(CONTENT_CONTENT);
         Log.startAction("htmlContentParse");
-        if (!StringUtil.isEmpty(summaryContent)) {
-            Document document = Jsoup.parse(summaryContent);
-            Elements imgs = document.select("img");
             //TODO create images view that will draw 1+ images
             //TODO create Image interface with height width and url
-            contentValues.put(STRIP_CONTENT, stripHtml(summaryContent));
-            contentValues.put(IMAGES, imgs.toString());
-        }
+        contentValues.put(STRIP_CONTENT, stripHtml(summaryContent));
+        contentValues.put(IMAGES, MediaContentRecognizer.findAllImages(true, summaryContent, contentContent));
         Log.endAction("htmlContentParse");
         //TODO need to recognize type of content text/image with text/images with text/video and text/audio with text and prepare fields for view
     }
 
     public String stripHtml(String html) {
+        if (StringUtil.isEmpty(html)) {
+            return null;
+        }
         return Html.fromHtml(html.replaceAll("<[^>]*>", StringUtil.EMPTY)).toString().trim();
     }
 
