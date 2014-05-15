@@ -13,7 +13,7 @@
             android:id="@+id/label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin"
+            android:padding="@dimen/default_spacing"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:fontFamily="fonts/Roboto-Medium.ttf"
@@ -28,12 +28,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_main_background"
+                android:paddingTop="2dip"
+                android:paddingBottom="2dip"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                android:background="@color/default_black"/>
         </RelativeLayout>
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin"
+            android:padding="@dimen/default_spacing"
             android:fontFamily="fonts/Roboto-Regular.ttf"
             android:textColor="@android:color/black"
             android:textSize="16sp"

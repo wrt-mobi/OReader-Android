@@ -12,9 +12,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.annotations.JsonSubJSONObject;
 import by.istin.android.xcore.annotations.dbBoolean;
 import by.istin.android.xcore.annotations.dbLong;
@@ -79,6 +83,9 @@ public class Content extends BaseEntity {
     @dbString
     public static final String IMAGES = "content_images";
 
+    @dbString
+    public static final String PUBLISHED_AS_STRING = "content_as_string";
+
     @Override
     public long generateId(DBHelper dbHelper, IDBConnection db, DataSourceRequest dataSourceRequest, ContentValues contentValues) {
         return HashUtils.generateId(contentValues.getAsString(ID_AS_STRING), dataSourceRequest.getParam(FeedlyApi.Streams.STREAM_ID));
@@ -100,6 +107,12 @@ public class Content extends BaseEntity {
             id = generateId(dbHelper, db, dataSourceRequest, contentValues);
             contentValues.put(ID, id);
         }
+        Long published = contentValues.getAsLong(PUBLISHED);
+        Format dateFormat = android.text.format.DateFormat.getDateFormat(ContextHolder.get());
+        //String pattern = ((SimpleDateFormat) dateFormat).toLocalizedPattern();
+        String formatedDate = ((SimpleDateFormat) dateFormat).format(new Date(published));
+        contentValues.put(PUBLISHED_AS_STRING, formatedDate);
+
         String summaryContent = contentValues.getAsString(SUMMARY_CONTENT);
         String contentContent = contentValues.getAsString(CONTENT_CONTENT);
         Log.startAction("htmlContentParse");
