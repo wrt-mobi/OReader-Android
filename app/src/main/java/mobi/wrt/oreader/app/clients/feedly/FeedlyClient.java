@@ -50,7 +50,7 @@ public class FeedlyClient implements ClientsFactory.IClient {
 
         @Override
         public String[] getAdapterColumns(Uri meta) {
-            return new String[]{Content.TITLE, Content.IMAGES, Content.STRIP_CONTENT};
+            return new String[]{Content.TITLE, Content.IMAGES, Content.STRIP_CONTENT, Content.PUBLISHED_AS_STRING};
         }
 
         @Override

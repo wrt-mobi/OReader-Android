@@ -3,15 +3,17 @@ package mobi.wrt.oreader.app;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
 import by.istin.android.xcore.utils.UiUtil;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.ContentsFragment;
+import mobi.wrt.oreader.app.fragments.responders.IContentClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class StreamActivity extends ActionBarActivity {
+public class StreamActivity extends ActionBarActivity implements IContentClick {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,4 +39,12 @@ public class StreamActivity extends ActionBarActivity {
         super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
+    @Override
+    public void onContentClick(long id, int position) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtras(getIntent());
+        intent.putExtra(BaseColumns._ID, id);
+        intent.putExtra(DetailsActivity.EXTRA_POSITION, position);
+        startActivity(intent);
+    }
 }

@@ -2,4 +2,6 @@
 
     <color name="white_main_background">#e4e4e4</color>
 
+    <color name="default_black">#333333</color>
+
 </resources>

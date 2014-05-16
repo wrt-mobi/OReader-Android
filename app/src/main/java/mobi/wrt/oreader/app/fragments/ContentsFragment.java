@@ -1,5 +1,6 @@
 package mobi.wrt.oreader.app.fragments;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,6 +22,8 @@ import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
+import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
+import mobi.wrt.oreader.app.fragments.responders.IContentClick;
 import mobi.wrt.oreader.app.image.Displayers;
 import mobi.wrt.oreader.app.view.FloatHeaderScrollListener;
 import mobi.wrt.oreader.app.view.ImagesViewGroup;
@@ -106,6 +109,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     public void onListItemClick(Cursor cursor, View v, int position, long id) {
+        findFirstResponderFor(IContentClick.class).onContentClick(id, position);
     }
 
     @Override
@@ -166,7 +170,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected int[] getAdapterControlIds() {
-        return new int[]{R.id.label, R.id.imagesViewGroup, R.id.description};
+        return new int[]{R.id.label, R.id.imagesViewGroup, R.id.description, R.id.date};
     }
 
     @Override
