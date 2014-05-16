@@ -28,7 +28,7 @@ import by.istin.android.xcore.utils.Log;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 import mobi.wrt.oreader.app.image.IContentImage;
-import mobi.wrt.oreader.app.utils.MediaContentRecognizer;
+import mobi.wrt.oreader.app.html.MediaContentRecognizer;
 
 /**
  * Created by Uladzimir_Klyshevich on 4/28/2014.
