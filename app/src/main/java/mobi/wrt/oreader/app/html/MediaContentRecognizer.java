@@ -16,6 +16,10 @@ import java.util.regex.Pattern;
 
 import by.istin.android.xcore.utils.Holder;
 import by.istin.android.xcore.utils.StringUtil;
+import mobi.wrt.oreader.app.html.elements.MediaElement;
+import mobi.wrt.oreader.app.html.elements.PageElement;
+import mobi.wrt.oreader.app.html.elements.TextElement;
+import mobi.wrt.oreader.app.html.elements.UrlMediaElement;
 
 public class MediaContentRecognizer {
 
@@ -27,22 +31,36 @@ public class MediaContentRecognizer {
 
     public static final String URL_REGEX = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
     public static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX, Pattern.CASE_INSENSITIVE);
+    //public static final String IMAGE_SELECTOR = "[height][width][src],a>img";
+    public static final String IMAGE_SELECTOR = "[src],a>img";
 
-    public static List<HtmlElement> recognize(String html) {
+    public static List<PageElement> recognize(String html) {
+        html = html.replaceAll("<p>","<br/>").replaceAll("<\\/p>","<br/>");
         Document document = Jsoup.parseBodyFragment(html);
         Element body = document.body();
-        final Elements objs = document.select("[height][width][src]");
-        final List<HtmlElement> list = new ArrayList<HtmlElement>();
+        final Elements objs = document.select(IMAGE_SELECTOR);
+        final List<PageElement> list = new ArrayList<PageElement>();
         final StringBuilder builder = new StringBuilder();
-        final Holder<Integer> objPositionHolder = new Holder<Integer>(0);
-        final Holder<Element> objHolder = new Holder<Element>(objs.get(0));
+        final Holder<Integer> objPositionHolder = new Holder<Integer>();
+        final Holder<Element> objHolder = new Holder<Element>();
+        if (objs == null || objs.isEmpty()) {
+            objPositionHolder.set(-1);
+        } else {
+            objPositionHolder.set(0);
+            objHolder.set(objs.get(0));
+        }
 
         new NodeTraversor(new NodeVisitor() {
 
             private boolean isSkipNext = false;
 
+            private List<Node> listIgnore = new ArrayList<Node>();
+
             @Override
             public void head(Node node, int i) {
+                if (listIgnore.contains(node)){
+                    return;
+                }
                 if (node instanceof TextNode) {
                     if (isSkipNext) {
                         return;
@@ -56,30 +74,36 @@ public class MediaContentRecognizer {
                 } else if (node instanceof Element) {
                     Element element = (Element)node;
                     String tagName = element.tag().getName();
-                    if (builder.length() > 0) {
-                        if (element.isBlock() || tagName.equals("br")) {
-                            builder.append("\n");
-                        };
-                    }
-                    if (element.equals(objHolder.get())) {
+                    if (element.isBlock() || tagName.equals("br")) {
+                        builder.append("<br/>");
+                    };
+                    if (objHolder.get() != null && element.equals(objHolder.get())) {
                         if (builder.length() > 0) {
-                            list.add(new HtmlElement(null, builder.toString()));
+                            list.add(new TextElement(builder.toString()));
                             builder.setLength(0);
                         }
-                        list.add(new HtmlElement(element, null));
+                        if (element.parent().tag().getName().equalsIgnoreCase("a")) {
+                            list.add(new UrlMediaElement(element));
+                        } else {
+                            list.add(new MediaElement(element));
+                        }
                         Integer position = objPositionHolder.get();
                         position = position + 1;
                         if (position < objs.size()) {
                             objHolder.set(objs.get(position));
                             objPositionHolder.set(position);
                         }
-                    } else if (isSpannedCanHandleTag(tagName)) {
+                    } else if (isSpannedCanHandleTag(tagName, element)) {
+                        if (builder.length() > 0) {
+                            builder.append(" ");
+                        }
                         appendAndSkip(element);
                     }
                 }
             }
 
             public void appendAndSkip(Element element) {
+                listIgnore.addAll(element.childNodes());
                 builder.append(element.toString());
                 isSkipNext = true;
             }
@@ -90,13 +114,13 @@ public class MediaContentRecognizer {
             }
         }).traverse(body);
         if (builder.length() > 0) {
-            list.add(new HtmlElement(null, builder.toString()));
+            list.add(new TextElement(builder.toString()));
         }
         return list;
     }
 
-    public static boolean isSpannedCanHandleTag(String tagName) {
-        return tagName.equalsIgnoreCase("a") ||
+    public static boolean isSpannedCanHandleTag(String tagName, Element element) {
+        return (tagName.equalsIgnoreCase("a") ||
                tagName.equalsIgnoreCase("strong") ||
                tagName.equalsIgnoreCase("b") ||
                tagName.equalsIgnoreCase("em") ||
@@ -113,7 +137,8 @@ public class MediaContentRecognizer {
                tagName.equalsIgnoreCase("sub") ||
                (tagName.length() == 2 &&
                         Character.toLowerCase(tagName.charAt(0)) == 'h' &&
-                        tagName.charAt(1) >= '1' && tagName.charAt(1) <= '6')
+                        tagName.charAt(1) >= '1' && tagName.charAt(1) <= '6'))
+               && !StringUtil.isEmpty(element.text().trim())
         ;
     }
 

@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:ellipsize="end"
-        android:text="asdasds asd adsd sad asdsadasdasdasdas asd asd asd asd asd asd sad asd asd asd"
         android:textSize="22sp"
         android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
         android:textAppearance="?android:attr/textAppearanceLarge" />
