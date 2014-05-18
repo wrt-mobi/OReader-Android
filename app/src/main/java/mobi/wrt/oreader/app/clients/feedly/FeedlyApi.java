@@ -99,7 +99,8 @@ public class FeedlyApi {
     }
 
     public static class Markers {
-        public static final String PATH = UrlBuilder.parent(BASE).s("markers").s("counts").build();
+        public static final UrlBuilder MARKERS = UrlBuilder.parent(BASE).s("markers");
+        public static final String COUNTS_PATH = UrlBuilder.parent(MARKERS).s("counts").build();
     }
 
 }

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobi.wrt.oreader.app.fragments.ContentsFragment">
+    tools:context="mobi.wrt.oreader.app.fragments.ContentsFragment"
+    >
 
     <ListView
         android:id="@android:id/list"

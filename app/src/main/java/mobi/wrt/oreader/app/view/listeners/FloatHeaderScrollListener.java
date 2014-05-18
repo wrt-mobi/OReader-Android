@@ -1,4 +1,4 @@
-package mobi.wrt.oreader.app.view;
+package mobi.wrt.oreader.app.view.listeners;
 
 import android.view.View;
 import android.view.ViewGroup;

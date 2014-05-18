@@ -1,29 +1,22 @@
 package mobi.wrt.oreader.app;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.view.View;
 
-import java.util.List;
-
 import by.istin.android.xcore.service.DataSourceService;
 import by.istin.android.xcore.source.DataSourceRequest;
-import by.istin.android.xcore.utils.ContentUtils;
 import by.istin.android.xcore.utils.Log;
-import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyAuthManager;
 import mobi.wrt.oreader.app.clients.feedly.bo.AuthResponse;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
-import mobi.wrt.oreader.app.clients.feedly.db.Content;
 import mobi.wrt.oreader.app.clients.feedly.processor.CategoriesProcessor;
 import mobi.wrt.oreader.app.clients.feedly.processor.MarkersProcessor;
 import mobi.wrt.oreader.app.clients.feedly.processor.SubscriptionsProcessor;
-import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 
 
 public class WizardActivity extends FragmentActivity {
@@ -45,7 +38,7 @@ public class WizardActivity extends FragmentActivity {
             dataSourceRequestCategories.setCacheable(false);
             dataSourceRequestCategories.setForceUpdateData(true);
 
-            DataSourceRequest dataSourceRequestMarkers = new DataSourceRequest(FeedlyApi.Markers.PATH);
+            DataSourceRequest dataSourceRequestMarkers = new DataSourceRequest(FeedlyApi.Markers.COUNTS_PATH);
             dataSourceRequestMarkers.setCacheable(true);
             dataSourceRequestMarkers.setCacheExpiration(2* DateUtils.HOUR_IN_MILLIS);
             dataSourceRequestMarkers.setForceUpdateData(true);
@@ -63,8 +56,6 @@ public class WizardActivity extends FragmentActivity {
 
 
             DataSourceService.execute(this, joinedRequestBuilder.build(), SubscriptionsProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
-            List<ContentValues> entities = ContentUtils.getEntities(this, Content.class, null, null);
-            ContentUtils.putEntities(this, Content.class, entities);
         } else {
             Log.xd(this, "is not logged");
         }

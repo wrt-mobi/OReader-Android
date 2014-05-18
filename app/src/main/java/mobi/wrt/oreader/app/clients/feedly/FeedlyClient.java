@@ -1,22 +1,33 @@
 package mobi.wrt.oreader.app.clients.feedly;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
-import java.util.List;
+import org.json.JSONArray;
 
+import java.util.List;
+import java.util.Set;
+
+import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XListFragment;
+import by.istin.android.xcore.model.JSONModel;
 import by.istin.android.xcore.provider.ModelContract;
+import by.istin.android.xcore.service.DataSourceService;
+import by.istin.android.xcore.utils.ContentUtils;
 import by.istin.android.xcore.utils.CursorUtils;
+import by.istin.android.xcore.utils.Log;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.AuthActivity;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
+import mobi.wrt.oreader.app.clients.feedly.datasource.PostDataSourceRequest;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
 import mobi.wrt.oreader.app.clients.feedly.processor.ContentProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 import mobi.wrt.oreader.app.image.IContentImage;
 
 public class FeedlyClient implements ClientsFactory.IClient {
@@ -34,6 +45,35 @@ public class FeedlyClient implements ClientsFactory.IClient {
     @Override
     public IContentsFragmentConnector getContentsFragmentConnector(Uri meta) {
         return new ContentsConnector();
+    }
+
+    @Override
+    public void markAsRead(boolean isRead, final Set<Long> readIds) {
+        if (readIds == null || readIds.isEmpty()) {
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] filter = StringUtil.toStringArray(readIds);
+                String selection = Content.ID + " in (" + StringUtil.makeJoinedPlaceholders("?", ",", readIds.size()) + ")";
+                List<ContentValues> entities = ContentUtils.getEntities(ContextHolder.get(), new String[]{Content.ID_AS_STRING}, ModelContract.getUri(Content.class), null, selection, filter);
+                if (entities == null) {
+                    Log.xe(FeedlyClient.this, "entity is null");
+                    return;
+                }
+                JSONModel jsonModel = new JSONModel();
+                JSONArray jsonArray = new JSONArray();
+                for (ContentValues contentValues : entities) {
+                    jsonArray.put(contentValues.getAsString(Content.ID_AS_STRING));
+                }
+                jsonModel.set("entryIds", jsonArray);
+                jsonModel.set("action", "markAsRead");
+                jsonModel.set("type", "entries");
+                PostDataSourceRequest postDataSourceRequest = new PostDataSourceRequest(FeedlyApi.Markers.MARKERS.build(), jsonModel.toString());
+                DataSourceService.execute(ContextHolder.get(), postDataSourceRequest, TestStringProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+            }
+        }).start();
     }
 
     private class ContentsConnector implements IContentsFragmentConnector {

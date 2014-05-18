@@ -1,4 +1,4 @@
-package mobi.wrt.oreader.app.view;
+package mobi.wrt.oreader.app.view.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;

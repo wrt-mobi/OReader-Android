@@ -33,7 +33,8 @@ import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
 import mobi.wrt.oreader.app.image.Displayers;
-import mobi.wrt.oreader.app.view.SymbolViewUtils;
+import mobi.wrt.oreader.app.view.utils.SymbolViewUtils;
+import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 
 public class HomeFragmentExpandableListView extends XFragment {
 
@@ -73,6 +74,7 @@ public class HomeFragmentExpandableListView extends XFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mListView = (AnimatedExpandableListView) view.findViewById(android.R.id.list);
+        TranslucentUtils.applyTranslucentPaddingForView(mListView, true, true, true);
         mListView.setGroupIndicator(null);
         // In order to show animations, we need to use a custom click handler
         // for our ExpandableListView.

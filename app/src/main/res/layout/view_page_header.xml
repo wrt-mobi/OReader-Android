@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:textSize="22sp"
+        android:fontFamily="fonts/Roboto-Medium.ttf"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/label"
+        android:layout_marginRight="8dip"
+        android:background="@color/default_black"/>
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white_main_background"
+        android:layout_below="@id/divider"
+        android:paddingTop="2dip"
+        android:paddingBottom="2dip"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:layout_marginBottom="8dip"
+        android:background="@color/default_black"/>
+
+</RelativeLayout>

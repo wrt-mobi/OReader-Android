@@ -10,6 +10,7 @@ import org.jsoup.select.NodeTraversor;
 import org.jsoup.select.NodeVisitor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +36,9 @@ public class MediaContentRecognizer {
     public static final String IMAGE_SELECTOR = "[src],a>img";
 
     public static List<PageElement> recognize(String html) {
+        if (StringUtil.isEmpty(html)) {
+            return Collections.emptyList();
+        }
         html = html.replaceAll("<p>","<br/>").replaceAll("<\\/p>","<br/>");
         Document document = Jsoup.parseBodyFragment(html);
         Element body = document.body();

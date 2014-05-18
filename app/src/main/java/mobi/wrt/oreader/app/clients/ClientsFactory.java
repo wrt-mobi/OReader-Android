@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import java.util.List;
+import java.util.Set;
 
 import by.istin.android.xcore.XCoreHelper;
 import by.istin.android.xcore.fragment.XListFragment;
@@ -38,6 +39,8 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
         void handleLoginResult(Activity activity, int requestCode, int resultCode, Intent data);
 
         IContentsFragmentConnector getContentsFragmentConnector(Uri meta);
+
+        void markAsRead(boolean isRead, Set<Long> readIds);
 
         public static interface IContentsFragmentConnector {
 
@@ -80,6 +83,11 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
         @Override
         public IContentsFragmentConnector getContentsFragmentConnector(Uri meta) {
             return null;
+        }
+
+        @Override
+        public void markAsRead(boolean isRead, Set<Long> readIds) {
+
         }
 
     }

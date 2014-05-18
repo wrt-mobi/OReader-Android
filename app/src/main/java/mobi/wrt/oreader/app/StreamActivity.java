@@ -18,7 +18,7 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UiUtil.setTranslucentStatus(this);
+        UiUtil.setTranslucentBars(this);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_stream);
         if (savedInstanceState == null) {

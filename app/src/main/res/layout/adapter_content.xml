@@ -6,8 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_card"
-        >
+        android:background="@drawable/bg_card">
 
         <TextView
             android:id="@+id/label"
@@ -16,18 +15,19 @@
             android:padding="@dimen/default_spacing"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:fontFamily="fonts/Roboto-Medium.ttf"
-            />
+            android:fontFamily="fonts/Roboto-Medium.ttf" />
+
         <RelativeLayout
             android:layout_below="@id/label"
             android:id="@+id/imagesContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <mobi.wrt.oreader.app.view.ImagesViewGroup
                 android:id="@+id/imagesViewGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
@@ -37,8 +37,9 @@
                 android:paddingBottom="2dip"
                 android:paddingLeft="8dip"
                 android:paddingRight="8dip"
-                android:background="@color/default_black"/>
+                android:background="@color/default_black" />
         </RelativeLayout>
+
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
@@ -48,8 +49,21 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:layout_below="@id/imagesContainer"
-            android:maxLines="4"
-            />
+            android:maxLines="4" />
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/readMarker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:background="#c0e4e4e4">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_read"/>
+
+    </FrameLayout>
 </FrameLayout>
