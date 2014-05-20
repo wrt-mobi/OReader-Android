@@ -1,5 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="mobi.wrt.oreader.app.fragments.HomeFragmentMagazine">
@@ -8,9 +9,8 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
         android:clipToPadding="false"
         android:drawSelectorOnTop="true"
-        />
+        android:padding="@dimen/activity_horizontal_margin" />
 
-</RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -21,6 +21,7 @@ import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.HomeFragmentExpandableListView;
 import mobi.wrt.oreader.app.fragments.NavigationDrawerFragment;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
+import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -43,6 +44,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         UiUtil.setTranslucentNavigation(this);
         setContentView(R.layout.activity_main);
+        TranslucentUtils.applyTranslucentPaddingForView((ViewGroup)findViewById(R.id.container), true, true, false);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

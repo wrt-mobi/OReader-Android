@@ -11,7 +11,9 @@ import java.util.Set;
 
 import by.istin.android.xcore.XCoreHelper;
 import by.istin.android.xcore.fragment.XListFragment;
+import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.AppUtils;
+import by.istin.android.xcore.utils.Holder;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyClient;
 import mobi.wrt.oreader.app.image.IContentImage;
 
@@ -32,6 +34,17 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
         return APP_SERVICE_KEY;
     }
 
+    public DataSourceRequest.JoinedRequestBuilder getUpdateDataSourceRequest(long cacheExpiration, boolean forceUpdateData, boolean cacheable) {
+        Holder<DataSourceRequest.JoinedRequestBuilder> holderJoinedRequestBuilder = new Holder<DataSourceRequest.JoinedRequestBuilder>();
+        for (Type type : Type.values()) {
+            getClient(type).addUpdateDataSourceRequest(holderJoinedRequestBuilder, cacheExpiration, forceUpdateData, cacheable);
+        }
+        if (holderJoinedRequestBuilder.isNull()) {
+            return null;
+        }
+        return holderJoinedRequestBuilder.get();
+    }
+
     public static interface IClient {
 
         void performLogin(Activity activity);
@@ -41,6 +54,8 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
         IContentsFragmentConnector getContentsFragmentConnector(Uri meta);
 
         void markAsRead(boolean isRead, Set<Long> readIds);
+
+        void addUpdateDataSourceRequest(Holder<DataSourceRequest.JoinedRequestBuilder> joinedRequestBuilder, long cacheExpiration, boolean forceUpdateData, boolean cacheable);
 
         public static interface IContentsFragmentConnector {
 
@@ -87,6 +102,11 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
 
         @Override
         public void markAsRead(boolean isRead, Set<Long> readIds) {
+
+        }
+
+        @Override
+        public void addUpdateDataSourceRequest(Holder<DataSourceRequest.JoinedRequestBuilder> joinedRequestBuilder, long cacheExpiration, boolean forceUpdateData, boolean cacheable) {
 
         }
 

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.format.DateUtils;
 
 import org.json.JSONArray;
 
@@ -16,17 +17,23 @@ import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.model.JSONModel;
 import by.istin.android.xcore.provider.ModelContract;
 import by.istin.android.xcore.service.DataSourceService;
+import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.ContentUtils;
 import by.istin.android.xcore.utils.CursorUtils;
+import by.istin.android.xcore.utils.Holder;
 import by.istin.android.xcore.utils.Log;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.AuthActivity;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
+import mobi.wrt.oreader.app.clients.feedly.bo.AuthResponse;
 import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
 import mobi.wrt.oreader.app.clients.feedly.datasource.PostDataSourceRequest;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
+import mobi.wrt.oreader.app.clients.feedly.processor.CategoriesProcessor;
 import mobi.wrt.oreader.app.clients.feedly.processor.ContentProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.MarkersProcessor;
+import mobi.wrt.oreader.app.clients.feedly.processor.SubscriptionsProcessor;
 import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 import mobi.wrt.oreader.app.image.IContentImage;
 
@@ -74,6 +81,42 @@ public class FeedlyClient implements ClientsFactory.IClient {
                 DataSourceService.execute(ContextHolder.get(), postDataSourceRequest, TestStringProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
             }
         }).start();
+    }
+
+    @Override
+    public void addUpdateDataSourceRequest(Holder<DataSourceRequest.JoinedRequestBuilder> joinedRequestBuilder, long cacheExpiration, boolean forceUpdateData, boolean cacheable) {
+        AuthResponse authResponse = FeedlyAuthManager.getAuthResponse();
+        if (authResponse != null) {
+            DataSourceRequest dataSourceRequestSubscriptions = new DataSourceRequest(FeedlyApi.Subscriptions.PATH);
+            dataSourceRequestSubscriptions.setCacheable(cacheable);
+            dataSourceRequestSubscriptions.setForceUpdateData(forceUpdateData);
+            dataSourceRequestSubscriptions.setCacheExpiration(cacheExpiration);
+
+            DataSourceRequest dataSourceRequestCategories = new DataSourceRequest(FeedlyApi.Categories.PATH);
+            dataSourceRequestCategories.setCacheable(cacheable);
+            dataSourceRequestCategories.setCacheExpiration(cacheExpiration);
+            dataSourceRequestCategories.setForceUpdateData(forceUpdateData);
+
+            DataSourceRequest dataSourceRequestMarkers = new DataSourceRequest(FeedlyApi.Markers.COUNTS_PATH);
+            dataSourceRequestMarkers.setCacheable(cacheable);
+            dataSourceRequestMarkers.setCacheExpiration(cacheExpiration);
+            dataSourceRequestMarkers.setForceUpdateData(forceUpdateData);
+
+            DataSourceRequest.JoinedRequestBuilder requestBuilder;
+            if (joinedRequestBuilder.isNull()) {
+                requestBuilder = new DataSourceRequest.JoinedRequestBuilder(dataSourceRequestSubscriptions);
+                requestBuilder.setDataSource(FeedlyDataSource.APP_SERVICE_KEY);
+                requestBuilder.setProcessor(SubscriptionsProcessor.APP_SERVICE_KEY);
+                joinedRequestBuilder.set(requestBuilder);
+            } else {
+                requestBuilder = joinedRequestBuilder.get();
+                requestBuilder.add(dataSourceRequestSubscriptions, SubscriptionsProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+            }
+            requestBuilder.add(dataSourceRequestCategories, CategoriesProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+            requestBuilder.add(dataSourceRequestMarkers, MarkersProcessor.APP_SERVICE_KEY, FeedlyDataSource.APP_SERVICE_KEY);
+        } else {
+            Log.xd(this, "is not logged");
+        }
     }
 
     private class ContentsConnector implements IContentsFragmentConnector {

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,11 @@ import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XFragment;
 import by.istin.android.xcore.model.CursorModel;
 import by.istin.android.xcore.provider.ModelContract;
+import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.ContentUtils;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.R;
+import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
@@ -68,13 +71,48 @@ public class HomeFragmentExpandableListView extends XFragment {
     @Override
     public void onViewCreated(View view) {
         super.onViewCreated(view);
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                update(true);
+            }
+        });
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    @Override
+    public void onReceiverOnDone(Bundle resultData) {
+        super.onReceiverOnDone(resultData);
+        View view = getView();
+        if (view == null) {
+            return;
+        }
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        update(isForceUpdateData());
+    }
+
+    private void update(boolean isForceUpdate) {
+        DataSourceRequest.JoinedRequestBuilder dataSourceRequestBuilder = ClientsFactory.get(getActivity()).getUpdateDataSourceRequest(getCacheExpiration(), isForceUpdate, isCacheable());
+        if (dataSourceRequestBuilder != null) {
+            dataSourceExecute(getActivity(), dataSourceRequestBuilder.build(), dataSourceRequestBuilder.getProcessorKey(), dataSourceRequestBuilder.getDataSourceKey());
+        }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mListView = (AnimatedExpandableListView) view.findViewById(android.R.id.list);
-        TranslucentUtils.applyTranslucentPaddingForView(mListView, true, true, true);
+        TranslucentUtils.applyTranslucentPaddingForView(mListView, false, false, true);
         mListView.setGroupIndicator(null);
         // In order to show animations, we need to use a custom click handler
         // for our ExpandableListView.
