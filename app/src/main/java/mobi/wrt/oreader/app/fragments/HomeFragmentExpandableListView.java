@@ -96,6 +96,17 @@ public class HomeFragmentExpandableListView extends XFragment {
     }
 
     @Override
+    public void hideProgress() {
+        super.hideProgress();
+        View view = getView();
+        if (view == null) {
+            return;
+        }
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setRefreshing(false);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         update(isForceUpdateData());
