@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.idunnololz.widgets.AnimatedExpandableListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -280,7 +280,7 @@ public class HomeFragmentExpandableListView extends XFragment {
         }
     }
 
-    private class ExpandableListAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter implements ImageLoadingListener{
+    private class ExpandableListAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter implements ImageLoadingListener {
 
         private int firstCharacterWidth = ContextHolder.get().getResources().getDimensionPixelSize(R.dimen.symbol_size);
 
