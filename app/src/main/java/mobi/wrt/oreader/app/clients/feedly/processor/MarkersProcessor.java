@@ -51,9 +51,9 @@ public class MarkersProcessor extends AbstractGsonProcessor<MarkersProcessor.Res
             if (entities != null && !entities.isEmpty()) {
                 for (ContentValues values : entities) {
                     Uri meta = Uri.parse(values.getAsString(ClientEntity.META));
+                    String idAsString = meta.getQueryParameter(Content.ID_AS_STRING);
                     Response.Marker found = null;
                     for (Response.Marker marker : unreadcounts) {
-                        String idAsString = meta.getQueryParameter(Content.ID_AS_STRING);
                         String markerId = marker.id;
                         if (idAsString.endsWith(markerId)) {
                             found = marker;
@@ -70,7 +70,6 @@ public class MarkersProcessor extends AbstractGsonProcessor<MarkersProcessor.Res
             }
         }
         ContentUtils.putEntities(context, ClientEntity.class, entities);
-        notifyChange(context, ClientEntity.class);
     }
 
     @Override

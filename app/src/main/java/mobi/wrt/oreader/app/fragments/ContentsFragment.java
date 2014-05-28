@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -97,6 +98,18 @@ public class ContentsFragment extends XListFragment {
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         setOnScrollListViewListener(touchListener.makeScrollListener());
+
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     @Override
@@ -152,6 +165,17 @@ public class ContentsFragment extends XListFragment {
             }
 
         });
+    }
+
+    @Override
+    public void hideProgress() {
+        super.hideProgress();
+        View view = getView();
+        if (view == null) {
+            return;
+        }
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setRefreshing(false);
     }
 
     @Override
