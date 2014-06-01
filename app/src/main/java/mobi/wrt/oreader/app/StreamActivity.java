@@ -44,7 +44,7 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtras(getIntent());
         intent.putExtra(BaseColumns._ID, id);
-        intent.putExtra(DetailsActivity.EXTRA_POSITION, position);
+        intent.putExtra(DetailsActivity.EXTRA_POSITION, position - 1);
         startActivity(intent);
     }
 }

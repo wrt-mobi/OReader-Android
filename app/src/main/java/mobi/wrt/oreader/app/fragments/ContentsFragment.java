@@ -9,7 +9,9 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,16 +19,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XListFragment;
+import by.istin.android.xcore.utils.AppUtils;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
 import mobi.wrt.oreader.app.fragments.responders.IContentClick;
+import mobi.wrt.oreader.app.helpers.ReadUnreadHelper;
 import mobi.wrt.oreader.app.image.Displayers;
 import mobi.wrt.oreader.app.view.ImagesViewGroup;
 import mobi.wrt.oreader.app.view.listeners.FloatHeaderScrollListener;
@@ -49,6 +52,7 @@ public class ContentsFragment extends XListFragment {
     //TODO need for future theme connector
     private ClientsFactory.IClient mClient;
     private ClientsFactory.IClient.IContentsFragmentConnector mContentsFragmentConnector;
+    private ReadUnreadHelper mReadUnreadHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,12 +60,11 @@ public class ContentsFragment extends XListFragment {
         setRetainInstance(true);
         mClient = ClientsFactory.get(getActivity()).getClient(ClientsFactory.Type.valueOf(getType()));
         mContentsFragmentConnector = mClient.getContentsFragmentConnector(getMeta());
+        mReadUnreadHelper = AppUtils.get(getActivity(), ReadUnreadHelper.APP_SERVICE_KEY);
     }
 
     private int headerHeightMin = ContextHolder.get().getResources().getDimensionPixelSize(R.dimen.contents_header_height_min);
     private int headerHeight = ContextHolder.get().getResources().getDimensionPixelSize(R.dimen.contents_header_height);
-
-    private Set<Long> alreadyReadIds = new HashSet<Long>();
 
     @Override
     public void onViewCreated(View view) {
@@ -72,7 +75,7 @@ public class ContentsFragment extends XListFragment {
         final View floatHeaderView = view.findViewById(R.id.header);
         initHeader(floatHeaderView);
         ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
-        ImageLoader.getInstance().displayImage("https://pbs.twimg.com/profile_banners/816653/1398816318/1500x500", headerImageView);
+        ImageLoader.getInstance().displayImage("https://pbs.twimg.com/profile_banners/454340464/1360006750/1500x500", headerImageView);
         setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, headerHeight, headerHeightMin));
         TranslucentUtils.applyTranslucentPaddingForView(listView, false, false, true);
         SwipeToReadListViewTouchListener touchListener =
@@ -82,14 +85,16 @@ public class ContentsFragment extends XListFragment {
 
                             @Override
                             public boolean canDismiss(int position) {
-                                return !alreadyReadIds.contains(getListAdapter().getItemId(position-1));
+                                long itemId = getListAdapter().getItemId(position - 1);
+                                return mReadUnreadHelper.isNotRead(itemId);
                             }
 
                             @Override
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 CursorAdapter listAdapter = (CursorAdapter) getListAdapter();
                                 for (int pos : reverseSortedPositions) {
-                                    alreadyReadIds.add(getListAdapter().getItemId(pos-1));
+                                    long itemId = getListAdapter().getItemId(pos - 1);
+                                    mReadUnreadHelper.markAsRead(itemId);
                                 }
                                 listAdapter.notifyDataSetChanged();
                             }
@@ -115,16 +120,27 @@ public class ContentsFragment extends XListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mClient.markAsRead(true, alreadyReadIds);
+        Set<Long> ids = mReadUnreadHelper.getIds();
+        mClient.markAsRead(true, ids);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ListAdapter listAdapter = getListAdapter();
+        if (listAdapter != null && listAdapter instanceof BaseAdapter) {
+            ((BaseAdapter)listAdapter).notifyDataSetChanged();
+        }
     }
 
     @Override
     protected View onAdapterGetView(SimpleCursorAdapter simpleCursorAdapter, int position, View view) {
         View resultView = super.onAdapterGetView(simpleCursorAdapter, position, view);
-        if (alreadyReadIds.contains(simpleCursorAdapter.getItemId(position))) {
-            resultView.findViewById(R.id.readMarker).setVisibility(View.VISIBLE);
-        } else {
+        long itemId = simpleCursorAdapter.getItemId(position);
+        if (mReadUnreadHelper.isNotRead(itemId)) {
             resultView.findViewById(R.id.readMarker).setVisibility(View.INVISIBLE);
+        } else {
+            resultView.findViewById(R.id.readMarker).setVisibility(View.VISIBLE);
         }
         return resultView;
     }

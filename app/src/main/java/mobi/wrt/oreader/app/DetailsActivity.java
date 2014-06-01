@@ -19,6 +19,7 @@ import java.util.List;
 import by.istin.android.xcore.fragment.CursorLoaderFragmentHelper;
 import by.istin.android.xcore.model.CursorModel;
 import by.istin.android.xcore.model.CursorModelLoader;
+import by.istin.android.xcore.utils.AppUtils;
 import by.istin.android.xcore.utils.CursorUtils;
 import by.istin.android.xcore.utils.StringUtil;
 import by.istin.android.xcore.utils.UiUtil;
@@ -26,6 +27,7 @@ import by.istin.android.xcore.widget.ViewPagerCursorAdapter;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
+import mobi.wrt.oreader.app.helpers.ReadUnreadHelper;
 import mobi.wrt.oreader.app.html.MediaContentRecognizer;
 import mobi.wrt.oreader.app.html.elements.PageElement;
 import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
@@ -56,22 +58,54 @@ public class DetailsActivity extends ActionBarActivity implements
 
     private ViewPagerCursorAdapter mPagerAdapter;
 
+    private int mCurrentPosition;
+
+    private ReadUnreadHelper mReadUnreadHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mReadUnreadHelper = AppUtils.get(this, ReadUnreadHelper.APP_SERVICE_KEY);
         getSupportActionBar().hide();
         UiUtil.setTranslucentBars(this);
         setContentView(R.layout.activity_details);
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (!CursorUtils.isEmpty(mCursor)) {
+                    mCursor.moveToPosition(position);
+                    Long id = CursorUtils.getLong(BaseColumns._ID, mCursor);
+                    mReadUnreadHelper.markAsRead(id);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+        });
         Intent intent = getIntent();
         mMeta = Uri.parse(intent.getStringExtra(ClientEntity.META));
         mType = intent.getStringExtra(ClientEntity.TYPE);
         mTitle = intent.getStringExtra(ClientEntity.TITLE);
-
+        mCurrentPosition = intent.getIntExtra(EXTRA_POSITION, 0);
         mClient = ClientsFactory.get(getActivity()).getClient(ClientsFactory.Type.valueOf(mType));
         mContentsFragmentConnector = mClient.getContentsFragmentConnector(mMeta);
         CursorLoaderFragmentHelper.onActivityCreated(this, savedInstanceState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mClient.markAsRead(true, mReadUnreadHelper.getIds());
     }
 
     @Override
@@ -193,6 +227,11 @@ public class DetailsActivity extends ActionBarActivity implements
                 }
             };
             mViewPager.setAdapter(mPagerAdapter);
+            mViewPager.setCurrentItem(mCurrentPosition);
+            //huck to make faster switch
+            mViewPager.setVisibility(View.VISIBLE);
+            mCursor.moveToPosition(mCurrentPosition);
+            mReadUnreadHelper.markAsRead(CursorUtils.getLong(BaseColumns._ID, mCursor));
         } else {
             mPagerAdapter.swapCursor(mCursor);
         }

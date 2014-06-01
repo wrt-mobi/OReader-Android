@@ -19,6 +19,7 @@ import mobi.wrt.oreader.app.clients.feedly.exception.FeedlyAuthException;
 import mobi.wrt.oreader.app.clients.flickr.FlickrModule;
 import mobi.wrt.oreader.app.clients.twitter.TwitterModule;
 import mobi.wrt.oreader.app.content.ContentProvider;
+import mobi.wrt.oreader.app.helpers.ReadUnreadHelper;
 import mobi.wrt.oreader.app.image.CustomImageDownloader;
 import mobi.wrt.oreader.app.image.Displayers;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -65,6 +66,7 @@ public class Application extends CoreApplication {
         IDBContentProviderSupport dbContentProvider = DBContentProviderFactory.getDefaultDBContentProvider(this, ContentProvider.ENTITIES);
 
         registerAppService(new ClientsFactory());
+        registerAppService(new ReadUnreadHelper());
 
         //TWITTER
         TwitterModule.onCreate(this, dbContentProvider);

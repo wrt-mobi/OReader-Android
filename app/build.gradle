@@ -41,6 +41,8 @@ dependencies {
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'com.nineoldandroids:library:2.4.0'
 
+    compile 'oauth.signpost:signpost-commonshttp4:1.2'
+    compile 'oauth.signpost:signpost-core:1.2.1.2'
 }
 
 //apply from: "gradle.properties"
