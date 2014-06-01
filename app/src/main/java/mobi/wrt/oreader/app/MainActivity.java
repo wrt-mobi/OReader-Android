@@ -75,6 +75,11 @@ public class MainActivity extends ActionBarActivity
                             .commit();
                 }
                 break;
+            case 1:
+                Intent intent = new Intent(this, WizardActivity.class);
+                intent.putExtra(WizardActivity.EXTRA_IGNORE_PREFERENCE, true);
+                startActivity(intent);
+                break;
             default:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))

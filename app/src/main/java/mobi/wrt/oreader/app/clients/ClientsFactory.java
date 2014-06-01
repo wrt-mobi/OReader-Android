@@ -15,6 +15,7 @@ import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.AppUtils;
 import by.istin.android.xcore.utils.Holder;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyClient;
+import mobi.wrt.oreader.app.clients.twitter.TwitterClient;
 import mobi.wrt.oreader.app.image.IContentImage;
 
 public class ClientsFactory implements XCoreHelper.IAppServiceKey {
@@ -127,7 +128,7 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
             case FACEBOOK:
                 return emptyClient;
             case TWITTER:
-                return emptyClient;
+                return new TwitterClient();
         }
         throw new IllegalArgumentException("unknown type");
     }

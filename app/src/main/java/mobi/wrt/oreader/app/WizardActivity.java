@@ -3,33 +3,24 @@ package mobi.wrt.oreader.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.format.DateUtils;
 import android.view.View;
 
 import by.istin.android.xcore.preference.PreferenceHelper;
-import by.istin.android.xcore.service.DataSourceService;
-import by.istin.android.xcore.source.DataSourceRequest;
-import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
-import mobi.wrt.oreader.app.clients.feedly.FeedlyApi;
-import mobi.wrt.oreader.app.clients.feedly.FeedlyAuthManager;
-import mobi.wrt.oreader.app.clients.feedly.bo.AuthResponse;
-import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
-import mobi.wrt.oreader.app.clients.feedly.processor.CategoriesProcessor;
-import mobi.wrt.oreader.app.clients.feedly.processor.MarkersProcessor;
-import mobi.wrt.oreader.app.clients.feedly.processor.SubscriptionsProcessor;
 
 
 public class WizardActivity extends FragmentActivity {
 
     private static final String PREF_IS_WIZARD_DONE = "pref_is_wizard_done";
 
+    public static final String EXTRA_IGNORE_PREFERENCE = "extra_ignore_preference";
+
     private ClientsFactory.IClient mClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (PreferenceHelper.getBoolean(PREF_IS_WIZARD_DONE, false)) {
+        if (PreferenceHelper.getBoolean(PREF_IS_WIZARD_DONE, false) && !getIntent().getBooleanExtra(EXTRA_IGNORE_PREFERENCE, false)) {
             onDoneClick(null);
             return;
         }

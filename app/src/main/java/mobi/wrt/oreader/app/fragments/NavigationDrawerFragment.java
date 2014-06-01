@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import mobi.wrt.oreader.app.R;
+import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -110,6 +111,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_support),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        TranslucentUtils.applyTranslucentPaddingForView(mDrawerListView, true, true, true);
         return mDrawerListView;
     }
 
