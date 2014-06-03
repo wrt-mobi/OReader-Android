@@ -3,10 +3,6 @@ package mobi.wrt.oreader.app.clients.twitter;
 import by.istin.android.xcore.CoreApplication;
 import by.istin.android.xcore.provider.IDBContentProviderSupport;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
-import mobi.wrt.oreader.app.clients.feedly.datasource.FeedlyDataSource;
-import mobi.wrt.oreader.app.clients.feedly.processor.AuthFeedlyProcessor;
-import mobi.wrt.oreader.app.clients.feedly.processor.CategoriesProcessor;
-import mobi.wrt.oreader.app.clients.feedly.processor.TestStringProcessor;
 import mobi.wrt.oreader.app.clients.twitter.datasource.TwitterDataSource;
 import mobi.wrt.oreader.app.clients.twitter.processor.AuthTwitterProcessor;
 
@@ -16,7 +12,7 @@ import mobi.wrt.oreader.app.clients.twitter.processor.AuthTwitterProcessor;
 public class TwitterModule {
 
     public static void onCreate(CoreApplication coreApplication, IDBContentProviderSupport dbContentProvider) {
-        AuthManagerFactory.initTw("gEu05wPZ3zJTWas5bDf1Ow", "MiDej7peU8wJkf93Rsq9gt8wLiwkXNW8KYsLxFBw");
+        AuthManagerFactory.initTw("lzZHjpd4yBf5AYz9Sc0oqkNSA", "8ZS1qmJgGGTxKuFbvDOC88Jc5au0O32rU8nNyqGIf49nrF1p3d");
         coreApplication.registerAppService(new TwitterDataSource());
         coreApplication.registerAppService(new AuthTwitterProcessor());
     }

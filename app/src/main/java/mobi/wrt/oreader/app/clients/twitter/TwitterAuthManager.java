@@ -3,6 +3,7 @@ package mobi.wrt.oreader.app.clients.twitter;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 
 import org.apache.http.client.methods.HttpUriRequest;
 
@@ -18,6 +19,7 @@ import mobi.wrt.oreader.app.clients.Profile;
 import mobi.wrt.oreader.app.clients.twitter.bo.UserItem;
 import mobi.wrt.oreader.app.clients.twitter.datasource.TwitterDataSource;
 import mobi.wrt.oreader.app.clients.twitter.processor.AuthTwitterProcessor;
+import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -183,48 +185,93 @@ public class TwitterAuthManager implements IAuthManager {
 	@Override
 	public boolean proceedRedirectURL(final IAuthListener delegate, String url,
 			final ISuccess<Profile> success) {
-		final String verifier = Uri.parse(url).getQueryParameter("oauth_verifier");
-		final String token = Uri.parse(url).getQueryParameter("oauth_token");
-		if (!StringUtil.isEmpty(verifier) && !StringUtil.isEmpty(token)) {
-            Core.ExecuteOperationBuilder<UserItem> userItemExecuteOperationBuilder = new Core.ExecuteOperationBuilder<UserItem>();
-            userItemExecuteOperationBuilder
-                    .setActivity(delegate.getActivity())
-                    .setDataSourceRequest(new DataSourceRequest("https://api.twitter.com/1.1/account/verify_credentials.json"))
-                    .setProcessorKey(AuthTwitterProcessor.APP_SERVICE_KEY)
-                    .setDataSourceKey(TwitterDataSource.APP_SERVICE_KEY)
-                    .setSuccess(new ISuccess<UserItem>() {
-                        @Override
-                        public void success(UserItem userItem) {
-                            Profile profile = new Profile();
-                            Long uid = userItem.getUid();
-                            if (uid != null) {
-                                profile.setId(uid.toString());
+        Uri uri = Uri.parse(url);
+        final String verifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);
+		final String token = uri.getQueryParameter("oauth_token");
+        if (!StringUtil.isEmpty(verifier) && !StringUtil.isEmpty(token)) {
+            final Handler handler = new Handler();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        setRetrieveAccessToken(verifier);
+                        String consumerToken = consumer.getToken();
+                        String tokenSecret = consumer.getTokenSecret();
+                        //consumer.setTokenWithSecret(consumerToken, tokenSecret);
+
+                        /*HttpGet get = new HttpGet("https://api.twitter.com/1/statuses/home_timeline.json");
+                        HttpParams params = new BasicHttpParams();
+                        HttpProtocolParams.setUseExpectContinue(params, false);
+                        get.setParams(params);
+
+                        try {
+                            consumer.sign(get);
+                            Log.xd(TwitterAuthManager.this, get);
+
+                            DefaultHttpClient client = new DefaultHttpClient();
+                            String response = client.execute(get, new BasicResponseHandler());
+                            JSONArray array = new JSONArray(response);
+                            Log.xd(TwitterAuthManager.this, array.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // handle this somehow
+                        }*/
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Core.ExecuteOperationBuilder<UserItem> userItemExecuteOperationBuilder = new Core.ExecuteOperationBuilder<UserItem>();
+                                userItemExecuteOperationBuilder
+                                        .setActivity(delegate.getActivity())
+                                        .setDataSourceRequest(new DataSourceRequest("https://api.twitter.com/1.1/account/verify_credentials.json"))
+                                        .setProcessorKey(AuthTwitterProcessor.APP_SERVICE_KEY)
+                                        .setDataSourceKey(TwitterDataSource.APP_SERVICE_KEY)
+                                        .setSuccess(new ISuccess<UserItem>() {
+                                            @Override
+                                            public void success(UserItem userItem) {
+                                                Profile profile = new Profile();
+                                                Long uid = userItem.getUid();
+                                                if (uid != null) {
+                                                    profile.setId(uid.toString());
+                                                }
+                                                profile.setFirstName(userItem.getName());
+                                                profile.setNickname(userItem.getNickname());
+                                                profile.setToken(verifier);
+                                                profile.setType(AuthManagerFactory.Type.TWITTER);
+                                                success.success(profile);
+                                            }
+                                        })
+                                        .setDataSourceServiceListener(new Core.SimpleDataSourceServiceListener() {
+                                            @Override
+                                            public void onDone(Bundle resultData) {
+
+                                            }
+
+                                            @Override
+                                            public void onError(final Exception exception) {
+                                                super.onError(exception);
+                                                delegate.getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        delegate.onError(exception);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                Core.get(delegate.getActivity()).execute(userItemExecuteOperationBuilder.build());
                             }
-                            profile.setFirstName(userItem.getName());
-                            profile.setNickname(userItem.getNickname());
-                            profile.setToken(verifier);
-                            profile.setType(AuthManagerFactory.Type.TWITTER);
-                            success.success(profile);
-                        }
-                    })
-                    .setDataSourceServiceListener(new Core.SimpleDataSourceServiceListener() {
-                        @Override
-                        public void onDone(Bundle resultData) {
-
-                        }
-
-                        @Override
-                        public void onError(final Exception exception) {
-                            super.onError(exception);
-                            delegate.getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    delegate.onError(exception);
-                                }
-                            });
-                        }
-                    });
-            Core.get(delegate.getActivity()).execute(userItemExecuteOperationBuilder.build());
+                        });
+                    } catch (OAuthMessageSignerException e) {
+                        e.printStackTrace();
+                    } catch (OAuthNotAuthorizedException e) {
+                        e.printStackTrace();
+                    } catch (OAuthExpectationFailedException e) {
+                        e.printStackTrace();
+                    } catch (OAuthCommunicationException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 		} else {
 			return false;
 		}

@@ -45,13 +45,18 @@ public class AuthManagerFactory {
 	public static enum Type {
 		FACEBOOK, TWITTER, VK, FEEDLY
 	}
-	
+
+    private static TwitterAuthManager sTwitterAuthManager;
+
 	public static IAuthManager getManager(Type type) {
 		switch (type) {
 		case FACEBOOK:
 			//return new FbManager(sFbClientId, sFbScope);
 		case TWITTER:
-			return new TwitterAuthManager(sConsumerKey, sConsumerSecret);
+            if (sTwitterAuthManager == null) {
+                sTwitterAuthManager = new TwitterAuthManager(sConsumerKey, sConsumerSecret);
+            }
+			return sTwitterAuthManager;
 		case VK:
 			//return new VkManager(sVkClientId, sVkScope);
 		case FEEDLY:
