@@ -5,6 +5,7 @@ import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Category;
 import mobi.wrt.oreader.app.clients.feedly.db.Content;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
+import mobi.wrt.oreader.app.clients.twitter.db.SearchTwitterProfile;
 
 public class ContentProvider extends DBContentProvider {
 
@@ -13,7 +14,10 @@ public class ContentProvider extends DBContentProvider {
             Category.class,
             Subscriptions.class,
             ClientEntity.class,
-            Content.class
+            Content.class,
+
+            //TWITTER
+            SearchTwitterProfile.class
     };
 
     @Override

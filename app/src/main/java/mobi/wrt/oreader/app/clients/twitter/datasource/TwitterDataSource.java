@@ -4,6 +4,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 
 import java.io.IOException;
 
+import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
@@ -19,7 +20,7 @@ public class TwitterDataSource extends HttpAndroidDataSource {
             public HttpRequestBase build(DataSourceRequest dataSourceRequest) throws IOException {
                 HttpRequestBase httpRequestBase = super.build(dataSourceRequest);
                 try {
-                    AuthManagerFactory.getManager(AuthManagerFactory.Type.TWITTER).sign(httpRequestBase);
+                    AuthManagerFactory.get(ContextHolder.get()).getManager(AuthManagerFactory.Type.TWITTER).sign(httpRequestBase);
                 } catch (Exception e) {
                     throw new TwitterAuthException(e);
                 }

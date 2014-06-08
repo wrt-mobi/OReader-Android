@@ -24,7 +24,11 @@ public class UserItem extends JSONModel {
 	private static final String NAME = "name";
 	
 	private static final String NICKNAME = "screen_name";
-	
+
+	public static final String TOKEN_SECRET = "token_secret";
+
+	public static final String TOKEN = "token";
+
 	public Long getUid() {
 		return getLong(UID);
 	}
@@ -37,6 +41,14 @@ public class UserItem extends JSONModel {
 		return getString(NAME);
 	}
 	
+	public String getTokenSecret() {
+		return getString(TOKEN_SECRET);
+	}
+
+	public String getToken() {
+		return getString(TOKEN);
+	}
+
 	public UserItem() {
 		super();
 	}

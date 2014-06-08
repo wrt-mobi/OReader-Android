@@ -37,7 +37,7 @@ public class AuthActivity extends ActionBarActivity implements IAuthManager.IAut
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-		mSocialManager = AuthManagerFactory.getManager(AuthManagerFactory.Type.values()[getIntent().getIntExtra(INTENT_TYPE, 0)]);
+		mSocialManager = AuthManagerFactory.get(this).getManager(AuthManagerFactory.Type.values()[getIntent().getIntExtra(INTENT_TYPE, 0)]);
 		mWebView = new WebView(this);
 		setContentView(mWebView);
 		mWebView.getSettings().setJavaScriptEnabled(true);

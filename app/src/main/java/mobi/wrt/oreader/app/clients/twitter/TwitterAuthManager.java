@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import org.apache.http.client.methods.HttpUriRequest;
-
-import java.io.IOException;
+import org.json.JSONException;
 
 import by.istin.android.xcore.Core;
 import by.istin.android.xcore.callable.ISuccess;
+import by.istin.android.xcore.preference.PreferenceHelper;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
@@ -31,113 +31,61 @@ import oauth.signpost.exception.OAuthNotAuthorizedException;
 
 public class TwitterAuthManager implements IAuthManager {
 
-	private static final String TAG = TwitterAuthManager.class.getSimpleName();
+    private static final String TAG = TwitterAuthManager.class.getSimpleName();
 
 	private static final String DENIED = "denied";
+    public static final String PREF_TWITTER_PROFILE = "pref_twitter_profile";
 
-	private OAuthConsumer consumer;
+    private OAuthConsumer mConsumer;
 
-	private OAuthProvider provider;
+	private OAuthProvider mProvider;
 
-	private static TwitterAuthManager instanse;
+    private UserItem mUserItem;
 
-	public TwitterAuthManager(String consumerKey, String consumerSecret) {
-			consumer = new CommonsHttpOAuthConsumer(
-					consumerKey,
-					consumerSecret);
-			provider = new CommonsHttpOAuthProvider(
+	public TwitterAuthManager() {
+        mConsumer = new CommonsHttpOAuthConsumer(
+                    TwitterOAuthConstants.CONSUMER_KEY,
+                    TwitterOAuthConstants.CONSUMER_SECRET);
+        mProvider = new CommonsHttpOAuthProvider(
 					TwitterOAuthConstants.REQUEST_URL,
 					TwitterOAuthConstants.ACCESS_URL,
 					TwitterOAuthConstants.AUTHORIZE_URL);
 	}
 
-	public static TwitterAuthManager getInstanse() {
-		return instanse;
-	}
-
-
-/*	private void saveActiveUser(Account user) {
-		CustomLog.logD(TAG, "saveActiveUser");
-		SharedPreferences.Editor editor = mContext.getSharedPreferences(
-				ApplicationConstants.SHARED_PREFERENSE, Context.MODE_PRIVATE)
-				.edit();
-		try {
-			editor.putString(ApplicationConstants.ARG_ACTIVE_USER_NAME,
-					ObjectSerializer.serialize((Serializable) user));
-		} catch (IOException e) {
-			CustomLog.logE(TAG, "error when serialize user " + e.getMessage());
-		}
-		editor.commit();
-	}
-
-	public void restoreToken(Account user) throws IOException,
-			ClassNotFoundException {
-		CustomLog.logD(TAG, "restoreToken");
-		saveActiveUser(user);
-		consumer.setTokenWithSecret(user.getToken(), user.getTokenSecret());
-
-	}
-*/
-
 	public boolean isDenied(String url) {
 		return url.contains(DENIED);
 	}
 
-	public boolean isAuthorizeUrl(String url) {
-		return url.startsWith(TwitterOAuthConstants.AUTHORIZE_URL);
-	}
-
-	public boolean isAuthorizeFinish(String url) {
-		return url.startsWith(TwitterOAuthConstants.AUTHORIZE_URL)
-				&& !url.startsWith(TwitterOAuthConstants.AUTHORIZE_URL + "?");
-	}
-
-	public boolean isAuthorizeUrlToken(String url) {
-		return url.startsWith(TwitterOAuthConstants.AUTHORIZE_URL + "?");
-	}
-
-/*	public static String getOauthVerifierFromUrl(String url) {
-		return url.substring(url.indexOf(TwitterConstants.OAUTH_VERIFIER)
-				+ TwitterConstants.OAUTH_VERIFIER.length());
-	}
-*/
     @Override
-	public void sign(HttpUriRequest request)
-			throws IOException {
+	public void sign(HttpUriRequest request) throws Exception{
         try {
-            consumer.sign(request);
+            if (mUserItem == null) {
+                restore();
+            }
+            if (mUserItem != null && mConsumer.getTokenSecret() == null) {
+                mConsumer.setTokenWithSecret(mUserItem.getToken(), mUserItem.getTokenSecret());
+                //setRetrieveAccessToken(mUserItem.getToken(), mUserItem.getTokenSecret());
+            }
+            mConsumer.sign(request);
         } catch (OAuthMessageSignerException e) {
             e.printStackTrace();
+            throw e;
         } catch (OAuthExpectationFailedException e) {
             e.printStackTrace();
+            throw e;
         } catch (OAuthCommunicationException e) {
             e.printStackTrace();
-        }
+            throw e;
+        } /*catch (OAuthNotAuthorizedException e) {
+            e.printStackTrace();
+            throw e;
+        }*/
     }
-
-	/*private Account getActiveUser() {
-		CustomLog.logD(TAG, "getActiveUser");
-		if (mContext == null) {
-			CustomLog.logE(TAG, "context == null ");
-		}
-		String serializeUser = mContext.getSharedPreferences(
-				ApplicationConstants.SHARED_PREFERENSE, Context.MODE_PRIVATE)
-				.getString(ApplicationConstants.ARG_ACTIVE_USER_NAME, "");
-		try {
-			return (Account) ObjectSerializer.deserialize(serializeUser);
-		} catch (IOException e) {
-			CustomLog.logE(TAG, "error when deserialize active user ", e);
-		} catch (ClassNotFoundException e) {
-			CustomLog.logE(TAG, "error when deserialize active user ", e);
-		}
-
-		return null;
-	}*/
 
 	public void setRetrieveAccessToken(String oauthVerifier)
 			throws OAuthMessageSignerException, OAuthNotAuthorizedException,
 			OAuthExpectationFailedException, OAuthCommunicationException {
-		provider.retrieveAccessToken(consumer, oauthVerifier);
+		mProvider.retrieveAccessToken(mConsumer, oauthVerifier);
 	}
 
 	@Override
@@ -150,7 +98,7 @@ public class TwitterAuthManager implements IAuthManager {
                 Activity activity = authListener.getActivity();
                 Runnable result;
                 try {
-                    final String url = provider.retrieveRequestToken(consumer, TwitterOAuthConstants.REDIRECT_URL);
+                    final String url = mProvider.retrieveRequestToken(mConsumer, TwitterOAuthConstants.REDIRECT_URL);
                     if (!StringUtil.isEmpty(url)) {
                         result = new Runnable() {
                             @Override
@@ -180,14 +128,12 @@ public class TwitterAuthManager implements IAuthManager {
 		return url.startsWith(TwitterOAuthConstants.REDIRECT_URL) && !isDenied(url);
 	}
 	
-	public static final String OAUTH_VERIFIER = "oauth_verifier=";
-
 	@Override
 	public boolean proceedRedirectURL(final IAuthListener delegate, String url,
 			final ISuccess<Profile> success) {
         Uri uri = Uri.parse(url);
         final String verifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);
-		final String token = uri.getQueryParameter("oauth_token");
+		final String token = uri.getQueryParameter(OAuth.OAUTH_TOKEN);
         if (!StringUtil.isEmpty(verifier) && !StringUtil.isEmpty(token)) {
             final Handler handler = new Handler();
             new Thread(new Runnable() {
@@ -195,35 +141,13 @@ public class TwitterAuthManager implements IAuthManager {
                 public void run() {
                     try {
                         setRetrieveAccessToken(verifier);
-                        String consumerToken = consumer.getToken();
-                        String tokenSecret = consumer.getTokenSecret();
-                        //consumer.setTokenWithSecret(consumerToken, tokenSecret);
-
-                        /*HttpGet get = new HttpGet("https://api.twitter.com/1/statuses/home_timeline.json");
-                        HttpParams params = new BasicHttpParams();
-                        HttpProtocolParams.setUseExpectContinue(params, false);
-                        get.setParams(params);
-
-                        try {
-                            consumer.sign(get);
-                            Log.xd(TwitterAuthManager.this, get);
-
-                            DefaultHttpClient client = new DefaultHttpClient();
-                            String response = client.execute(get, new BasicResponseHandler());
-                            JSONArray array = new JSONArray(response);
-                            Log.xd(TwitterAuthManager.this, array.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            // handle this somehow
-                        }*/
-
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 Core.ExecuteOperationBuilder<UserItem> userItemExecuteOperationBuilder = new Core.ExecuteOperationBuilder<UserItem>();
                                 userItemExecuteOperationBuilder
                                         .setActivity(delegate.getActivity())
-                                        .setDataSourceRequest(new DataSourceRequest("https://api.twitter.com/1.1/account/verify_credentials.json"))
+                                        .setDataSourceRequest(new DataSourceRequest(TwitterApi.Account.VERIFY_CREDENTIALS))
                                         .setProcessorKey(AuthTwitterProcessor.APP_SERVICE_KEY)
                                         .setDataSourceKey(TwitterDataSource.APP_SERVICE_KEY)
                                         .setSuccess(new ISuccess<UserItem>() {
@@ -239,6 +163,10 @@ public class TwitterAuthManager implements IAuthManager {
                                                 profile.setToken(verifier);
                                                 profile.setType(AuthManagerFactory.Type.TWITTER);
                                                 success.success(profile);
+                                                userItem.set(UserItem.TOKEN_SECRET, mConsumer.getTokenSecret());
+                                                userItem.set(UserItem.TOKEN, mConsumer.getToken());
+                                                saveSettings(userItem);
+                                                mUserItem = userItem;
                                             }
                                         })
                                         .setDataSourceServiceListener(new Core.SimpleDataSourceServiceListener() {
@@ -261,14 +189,8 @@ public class TwitterAuthManager implements IAuthManager {
                                 Core.get(delegate.getActivity()).execute(userItemExecuteOperationBuilder.build());
                             }
                         });
-                    } catch (OAuthMessageSignerException e) {
-                        e.printStackTrace();
-                    } catch (OAuthNotAuthorizedException e) {
-                        e.printStackTrace();
-                    } catch (OAuthExpectationFailedException e) {
-                        e.printStackTrace();
-                    } catch (OAuthCommunicationException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        delegate.onError(e);
                     }
                 }
             }).start();
@@ -278,16 +200,34 @@ public class TwitterAuthManager implements IAuthManager {
 		return true;
 	}
 
-	@Override
+    private void saveSettings(UserItem userItem) {
+        PreferenceHelper.set(PREF_TWITTER_PROFILE, userItem != null ? userItem.toString() : null);
+    }
+
+    @Override
 	public boolean isLogged() {
-		// TODO Auto-generated method stub
-		return false;
+        restore();
+		return mUserItem != null;
 	}
 
-	@Override
+    private void restore() {
+        if (mUserItem != null) {
+            return;
+        }
+        String savedValue = PreferenceHelper.getString(PREF_TWITTER_PROFILE, StringUtil.EMPTY);
+        if (!StringUtil.isEmpty(savedValue)) {
+            try {
+                mUserItem = new UserItem(savedValue);
+            } catch (JSONException e) {
+                //is not possible
+            }
+        }
+    }
+
+    @Override
 	public void exit() {
-		// TODO Auto-generated method stub
-		
+        saveSettings(null);
+        mUserItem = null;
 	}
 
 }

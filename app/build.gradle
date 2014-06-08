@@ -13,6 +13,8 @@ android {
         buildConfigField "String", "FEEDLY_CLIENT_ID_VALUE", FEEDLY_CLIENT_ID_VALUE
         buildConfigField "String", "FEEDLY_CLIENT_SECRET_VALUE", FEEDLY_CLIENT_SECRET_VALUE
         buildConfigField "String", "FLICKR_API_KEY", FLICKR_API_KEY
+        buildConfigField "String", "TWITTER_CONSUMER_KEY", TWITTER_CONSUMER_KEY
+        buildConfigField "String", "TWITTER_CONSUMER_SECRET", TWITTER_CONSUMER_SECRET
     }
     buildTypes {
         release {
