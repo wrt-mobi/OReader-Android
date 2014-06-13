@@ -7,6 +7,7 @@ import by.istin.android.xcore.db.impl.DBHelper;
 import by.istin.android.xcore.processor.impl.AbstractGsonBatchProcessor;
 import by.istin.android.xcore.provider.IDBContentProviderSupport;
 import by.istin.android.xcore.source.DataSourceRequest;
+import by.istin.android.xcore.utils.Log;
 import mobi.wrt.oreader.app.clients.twitter.TwitterApi;
 import mobi.wrt.oreader.app.clients.twitter.db.SearchTwitterProfile;
 
@@ -22,7 +23,8 @@ public class SearchTwitterProfileProcessor extends AbstractGsonBatchProcessor<Co
     protected void onStartProcessing(DataSourceRequest dataSourceRequest, IDBConnection dbConnection) {
         super.onStartProcessing(dataSourceRequest, dbConnection);
         String param = dataSourceRequest.getParam(TwitterApi.Users.SEARCH_QUERY_PARAM);
-        dbConnection.delete(DBHelper.getTableName(getClazz()), SearchTwitterProfile.SEARCH_QUERY + "=?", new String[]{param});
+        int delete = dbConnection.delete(DBHelper.getTableName(getClazz()), SearchTwitterProfile.SEARCH_QUERY + "=?", new String[]{param});
+        Log.xd(this, "delete " + delete);
     }
 
     @Override

@@ -85,6 +85,8 @@ public class ContentsFragment extends XListFragment {
                 Log.xd(ContentsFragment.this, "banner_url: " + s);
                 if (!StringUtil.isEmpty(s)) {
                     ImageLoader.getInstance().displayImage(s, headerImageView);
+                } else {
+                    ImageLoader.getInstance().displayImage("assets://backgrounds/night_2.png", headerImageView);
                 }
             }
         });
