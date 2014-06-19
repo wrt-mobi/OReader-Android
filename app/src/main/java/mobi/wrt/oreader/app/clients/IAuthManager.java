@@ -5,18 +5,15 @@ import android.app.Activity;
 
 import org.apache.http.client.methods.HttpUriRequest;
 
-import java.io.IOException;
-
+import by.istin.android.xcore.callable.IError;
 import by.istin.android.xcore.callable.ISuccess;
 
 public interface IAuthManager {
 
-    public static interface IAuthListener {
+    public static interface IAuthListener extends IError<Exception> {
         void showLoading();
         void hideLoading();
         Activity getActivity();
-
-        void onError(Exception e);
     }
 
     /*	public static String getOauthVerifierFromUrl(String url) {
@@ -24,7 +21,7 @@ public interface IAuthManager {
                     + TwitterConstants.OAUTH_VERIFIER.length());
         }
     */
-    void sign(HttpUriRequest request) throws IOException;
+    void sign(HttpUriRequest request) throws Exception;
 
     void getAuthorizationUrl(IAuthListener listener, ISuccess<String> success);
 	

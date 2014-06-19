@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
 import by.istin.android.xcore.source.impl.http.exception.IOStatusException;
@@ -27,7 +28,11 @@ public class FeedlyDataSource extends HttpAndroidDataSource {
             @Override
             public HttpRequestBase build(DataSourceRequest dataSourceRequest) throws IOException {
                 HttpRequestBase httpRequestBase = super.build(dataSourceRequest);
-                AuthManagerFactory.getManager(AuthManagerFactory.Type.FEEDLY).sign(httpRequestBase);
+                try {
+                    AuthManagerFactory.get(ContextHolder.get()).getManager(AuthManagerFactory.Type.FEEDLY).sign(httpRequestBase);
+                } catch (Exception e) {
+                    throw new IOException(e);
+                }
                 return httpRequestBase;
             }
 

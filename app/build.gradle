@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1"
 
     defaultConfig {
         minSdkVersion 10
@@ -13,6 +13,8 @@ android {
         buildConfigField "String", "FEEDLY_CLIENT_ID_VALUE", FEEDLY_CLIENT_ID_VALUE
         buildConfigField "String", "FEEDLY_CLIENT_SECRET_VALUE", FEEDLY_CLIENT_SECRET_VALUE
         buildConfigField "String", "FLICKR_API_KEY", FLICKR_API_KEY
+        buildConfigField "String", "TWITTER_CONSUMER_KEY", TWITTER_CONSUMER_KEY
+        buildConfigField "String", "TWITTER_CONSUMER_SECRET", TWITTER_CONSUMER_SECRET
     }
     buildTypes {
         release {

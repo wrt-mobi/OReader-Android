@@ -22,12 +22,16 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.util.Set;
 
 import by.istin.android.xcore.ContextHolder;
+import by.istin.android.xcore.callable.ISuccess;
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.utils.AppUtils;
+import by.istin.android.xcore.utils.Log;
+import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
+import mobi.wrt.oreader.app.clients.twitter.TwitterRequestHelper;
 import mobi.wrt.oreader.app.fragments.responders.IContentClick;
 import mobi.wrt.oreader.app.helpers.ReadUnreadHelper;
 import mobi.wrt.oreader.app.image.Displayers;
@@ -74,8 +78,18 @@ public class ContentsFragment extends XListFragment {
         listView.addHeaderView(headerView, null, false);
         final View floatHeaderView = view.findViewById(R.id.header);
         initHeader(floatHeaderView);
-        ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
-        ImageLoader.getInstance().displayImage("https://pbs.twimg.com/profile_banners/454340464/1360006750/1500x500", headerImageView);
+        final ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
+        TwitterRequestHelper.searchProfile(view.getContext(), getTitle(), new ISuccess<String>() {
+            @Override
+            public void success(String s) {
+                Log.xd(ContentsFragment.this, "banner_url: " + s);
+                if (!StringUtil.isEmpty(s)) {
+                    ImageLoader.getInstance().displayImage(s, headerImageView);
+                } else {
+                    ImageLoader.getInstance().displayImage("assets://backgrounds/night_2.png", headerImageView);
+                }
+            }
+        });
         setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, headerHeight, headerHeightMin));
         TranslucentUtils.applyTranslucentPaddingForView(listView, false, false, true);
         SwipeToReadListViewTouchListener touchListener =

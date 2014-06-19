@@ -13,6 +13,7 @@ import by.istin.android.xcore.provider.IDBContentProviderSupport;
 import by.istin.android.xcore.provider.impl.DBContentProviderFactory;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
+import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyModule;
 import mobi.wrt.oreader.app.clients.feedly.exception.FeedlyAuthException;
@@ -66,6 +67,7 @@ public class Application extends CoreApplication {
         IDBContentProviderSupport dbContentProvider = DBContentProviderFactory.getDefaultDBContentProvider(this, ContentProvider.ENTITIES);
 
         registerAppService(new ClientsFactory());
+        registerAppService(new AuthManagerFactory());
         registerAppService(new ReadUnreadHelper());
 
         //TWITTER
