@@ -25,8 +25,6 @@ public class TwitterRequestHelper {
         Core.ExecuteOperationBuilder<ContentValues[]> userItemExecuteOperationBuilder = new Core.ExecuteOperationBuilder<ContentValues[]>();
         String requestDataUri = TwitterApi.Users.SEARCH.build(StringUtil.encode(q), "1", "1");
         DataSourceRequest pDataSourceRequest = new DataSourceRequest(requestDataUri);
-        //TODO something wrong with cache
-        //pDataSourceRequest.setForceUpdateData(true);
         pDataSourceRequest.setCacheable(true);
         pDataSourceRequest.setCacheExpiration(DateUtils.DAY_IN_MILLIS);
         final Holder<Boolean> isCached = new Holder<Boolean>(false);

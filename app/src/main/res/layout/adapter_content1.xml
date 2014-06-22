@@ -1,0 +1,75 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card">
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:fontFamily="fonts/Roboto-Medium.ttf" />
+
+        <RelativeLayout
+            android:layout_below="@id/label"
+            android:id="@+id/imagesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <mobi.wrt.oreader.app.view.ImagesViewGroup
+                android:id="@+id/imagesViewGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_main_background"
+                android:paddingTop="2dip"
+                android:paddingBottom="2dip"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                android:background="@color/default_black" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing"
+            android:fontFamily="fonts/Roboto-Regular.ttf"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:layout_below="@id/imagesContainer"
+            android:maxLines="4" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/readMarker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:background="#c0e4e4e4">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="&#10004;"
+            android:gravity="center"
+            android:fontFamily="fonts/Roboto-Regular.ttf"
+            android:bufferType="spannable"
+            android:textSize="100sp"
+            android:textColor="@color/white_main_background"
+            />
+
+    </FrameLayout>
+</FrameLayout>

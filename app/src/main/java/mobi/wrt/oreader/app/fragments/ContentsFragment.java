@@ -16,12 +16,14 @@ import java.util.Set;
 
 import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.fragment.XListFragment;
+import by.istin.android.xcore.model.CursorModel;
 import by.istin.android.xcore.utils.AppUtils;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.responders.IContentClick;
 import mobi.wrt.oreader.app.helpers.ReadUnreadHelper;
+import mobi.wrt.oreader.app.ui.StreamConfig;
 import mobi.wrt.oreader.app.view.ImagesViewGroup;
 import mobi.wrt.oreader.app.view.listeners.FloatHeaderScrollListener;
 import mobi.wrt.oreader.app.view.listeners.SwipeToReadListViewTouchListener;
@@ -29,12 +31,16 @@ import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 
 public class ContentsFragment extends XListFragment {
 
-    public static Fragment newInstance(String meta, String type, String title) {
+    private static final String EXTRA_ADAPTER_TYPE = "adapter_type";
+
+    public static Fragment newInstance(StreamConfig.AdapterType adapterType, String meta, String type, String title) {
         Fragment fragment = new ContentsFragment();
         Bundle args = new Bundle();
         args.putParcelable(ClientEntity.META, Uri.parse(meta));
         args.putString(ClientEntity.TYPE, type);
         args.putString(ClientEntity.TITLE, title);
+        args.putString(ClientEntity.TITLE, title);
+        args.putInt(EXTRA_ADAPTER_TYPE, adapterType.ordinal());
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,9 +69,10 @@ public class ContentsFragment extends XListFragment {
         final View headerView = View.inflate(getActivity(), R.layout.view_fake_header, null);
         listView.addHeaderView(headerView, null, false);
 
-        View floatHeaderView = getActivity().findViewById(R.id.header);
-        if (floatHeaderView != null) {
-            setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, headerHeight, headerHeightMin));
+        View floatHeaderView = getActivity().findViewById(R.id.floatHeader);
+        View floatHeaderShadowView = getActivity().findViewById(R.id.headerShadow);
+        if (floatHeaderView != null && floatHeaderShadowView != null) {
+            setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, floatHeaderShadowView, headerHeight, headerHeightMin));
         }
         TranslucentUtils.applyTranslucentPaddingForView(listView, false, false, true);
         SwipeToReadListViewTouchListener touchListener =
@@ -127,11 +134,13 @@ public class ContentsFragment extends XListFragment {
     protected View onAdapterGetView(SimpleCursorAdapter simpleCursorAdapter, int position, View view) {
         View resultView = super.onAdapterGetView(simpleCursorAdapter, position, view);
         long itemId = simpleCursorAdapter.getItemId(position);
+        Cursor cursor = (Cursor) simpleCursorAdapter.getItem(position);
         if (mReadUnreadHelper.isNotRead(itemId)) {
             resultView.findViewById(R.id.readMarker).setVisibility(View.INVISIBLE);
         } else {
             resultView.findViewById(R.id.readMarker).setVisibility(View.VISIBLE);
         }
+        mContentsFragmentConnector.onAdapterGetView(getAdapterType(), itemId, cursor, position, view);
         return resultView;
     }
 
@@ -193,7 +202,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected String[] getAdapterColumns() {
-        return mContentsFragmentConnector.getAdapterColumns(getMeta());
+        return mContentsFragmentConnector.getAdapterColumns(getAdapterType(), getMeta());
     }
 
     @Override
@@ -209,7 +218,7 @@ public class ContentsFragment extends XListFragment {
 
     @Override
     protected int[] getAdapterControlIds() {
-        return new int[]{R.id.label, R.id.imagesViewGroup, R.id.description, R.id.date};
+        return mContentsFragmentConnector.getAdapterControlIds(getAdapterType());
     }
 
     @Override
@@ -232,13 +241,18 @@ public class ContentsFragment extends XListFragment {
     }
 
     @Override
+    public CursorModel.CursorModelCreator getCursorModelCreator() {
+        return mContentsFragmentConnector.getCursorModelCreator(getAdapterType(), getMeta());
+    }
+
+    @Override
     public String getOrder() {
         return mContentsFragmentConnector.getOrder(getMeta());
     }
 
     @Override
     protected int getAdapterLayout() {
-        return R.layout.adapter_content;
+        return getAdapterType().getLayout();
     }
 
     private Uri mMeta;
@@ -256,5 +270,9 @@ public class ContentsFragment extends XListFragment {
 
     public String getTitle() {
         return getArguments().getString(ClientEntity.TITLE);
+    }
+
+    public StreamConfig.AdapterType getAdapterType() {
+        return StreamConfig.AdapterType.values()[getArguments().getInt(EXTRA_ADAPTER_TYPE)];
     }
 }

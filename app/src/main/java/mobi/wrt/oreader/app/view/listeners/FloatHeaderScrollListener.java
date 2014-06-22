@@ -8,6 +8,7 @@ import android.widget.AbsListView;
 
 public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
 
+    private final View floatHeaderShadowView;
     private int currentTopMargin;
 
     private int lastVisibleItem = -1;
@@ -22,11 +23,12 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
 
     private int headerHeightMin;
 
-    public FloatHeaderScrollListener(View listViewHeaderFakeView, View floatHeaderView, int headerHeight, int headerHeightMin) {
+    public FloatHeaderScrollListener(View listViewHeaderFakeView, View floatHeaderView, View floatHeaderShadowView, int headerHeight, int headerHeightMin) {
         this.listViewHeaderFakeView = listViewHeaderFakeView;
         this.headerHeight = headerHeight;
         this.headerHeightMin = headerHeightMin;
         this.floatHeaderView = floatHeaderView;
+        this.floatHeaderShadowView = floatHeaderShadowView;
     }
 
     @Override
@@ -48,15 +50,19 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
                     int bottomValue = bottom - view.getPaddingTop();
                     int topMargin = firstVisibleItem == 0 ? -(headerHeight - bottomValue) : -headerHeight;
                     if (isShortVariantShown && topMargin < currentTopMargin) {
+                        floatHeaderShadowView.setVisibility(View.VISIBLE);
                         return;
                     }
                     isShortVariantShown = false;
                     updateHeaderMargin(topMargin, false);
+                    floatHeaderShadowView.setVisibility(View.GONE);
                 } else {
                     //header is not visible can ignore or hide if shown short variant of header
                     if (isShortVariantShown && lastVisibleItem == firstVisibleItem) {
+                        floatHeaderShadowView.setVisibility(View.VISIBLE);
                         return;
                     }
+                    floatHeaderShadowView.setVisibility(View.GONE);
                     isShortVariantShown = false;
                     int topMargin = -headerHeight;
                     updateHeaderMargin(topMargin, true);
@@ -68,16 +74,19 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
                     isShortVariantShown = true;
                     int topMargin = headerHeightMin - headerHeight;
                     updateHeaderMargin(topMargin, true);
+                    floatHeaderShadowView.setVisibility(View.VISIBLE);
                 } else {
                     //full header visible
                     int bottom = listViewHeaderFakeView.getBottom();
                     int bottomValue = bottom - view.getPaddingTop();
                     int topMargin = firstVisibleItem == 0 ? -(headerHeight - bottomValue) : -headerHeight;
                     if (isShortVariantShown && topMargin < currentTopMargin) {
+                        floatHeaderShadowView.setVisibility(View.VISIBLE);
                         return;
                     }
                     isShortVariantShown = false;
                     updateHeaderMargin(topMargin, false);
+                    floatHeaderShadowView.setVisibility(View.GONE);
                 }
             }
         } finally {

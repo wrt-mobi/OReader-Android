@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/header"
+    android:id="@+id/floatHeader"
     android:layout_width="match_parent"
     android:layout_height="@dimen/contents_header_height"
     tools:showIn="@layout/fragment_contens">
@@ -48,14 +48,17 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/firstSymbol"
         android:id="@+id/tabs"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="12dip">
 
         <TextView
+            android:id="@+id/newsTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
@@ -65,22 +68,26 @@
             android:paddingRight="8dip" />
 
         <TextView
+            android:id="@+id/youtubeTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:text="YOUTUBE"
+            android:visibility="gone"
             android:paddingLeft="8dip"
             android:paddingRight="8dip" />
 
         <TextView
+            android:id="@+id/twitterTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:text="TWITTER"
+            android:visibility="gone"
             android:paddingLeft="8dip"
             android:paddingRight="8dip" />
     </LinearLayout>
@@ -97,4 +104,5 @@
         android:ellipsize="end"
         android:layout_above="@id/tabs"
         android:layout_toRightOf="@id/firstSymbol" />
+
 </RelativeLayout>

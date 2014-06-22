@@ -1,13 +1,17 @@
 package mobi.wrt.oreader.app.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -18,7 +22,27 @@ import mobi.wrt.oreader.app.image.IContentImage;
 /**
  * Created by Uladzimir_Klyshevich on 5/6/2014.
  */
-public class ImagesViewGroup extends RelativeLayout {
+public class ImagesViewGroup extends RelativeLayout implements ImageLoadingListener {
+
+    @Override
+    public void onLoadingStarted(String imageUri, View view) {
+
+    }
+
+    @Override
+    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+        view.setLayoutParams(DEFAULT_LAYOUT_PARAMS);
+    }
+
+    @Override
+    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+    }
+
+    @Override
+    public void onLoadingCancelled(String imageUri, View view) {
+
+    }
 
     public static enum DisplayMode {
         FULL, CROP;
@@ -112,7 +136,7 @@ public class ImagesViewGroup extends RelativeLayout {
                 imageView.setLayoutParams(params);
                 thumbnailContainer.addView(imageView);
             }
-            ImageLoader.getInstance().displayImage(url, imageView, Displayers.BITMAP_DISPLAYER_OPTIONS);
+            ImageLoader.getInstance().displayImage(url, imageView, Displayers.BITMAP_DISPLAYER_OPTIONS, this);
         }
     }
 

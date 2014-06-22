@@ -5,18 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.view.View;
 
 import java.util.List;
 import java.util.Set;
 
 import by.istin.android.xcore.XCoreHelper;
 import by.istin.android.xcore.fragment.XListFragment;
+import by.istin.android.xcore.model.CursorModel;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.AppUtils;
 import by.istin.android.xcore.utils.Holder;
 import mobi.wrt.oreader.app.clients.feedly.FeedlyClient;
 import mobi.wrt.oreader.app.clients.twitter.TwitterClient;
 import mobi.wrt.oreader.app.image.IContentImage;
+import mobi.wrt.oreader.app.ui.StreamConfig;
 
 public class ClientsFactory implements XCoreHelper.IAppServiceKey {
 
@@ -64,7 +67,7 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
 
             String getProcessorKey(Uri meta);
 
-            String[] getAdapterColumns(Uri meta);
+            String[] getAdapterColumns(StreamConfig.AdapterType adapterType, Uri meta);
 
             String getOrder(Uri meta);
 
@@ -81,6 +84,12 @@ public class ClientsFactory implements XCoreHelper.IAppServiceKey {
             String[] getSelectionArgs(Uri meta);
 
             List<IContentImage> getImagesFromContent(Cursor cursor);
+
+            CursorModel.CursorModelCreator getCursorModelCreator(StreamConfig.AdapterType adapterType, Uri meta);
+
+            void onAdapterGetView(StreamConfig.AdapterType adapterType, long itemId, Cursor cursor, int position, View view);
+
+            int[] getAdapterControlIds(StreamConfig.AdapterType adapterType);
         }
     }
 

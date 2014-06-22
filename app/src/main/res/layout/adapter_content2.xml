@@ -49,7 +49,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:layout_below="@id/imagesContainer"
-            android:maxLines="4" />
+            />
 
     </RelativeLayout>
 
@@ -57,13 +57,19 @@
         android:id="@+id/readMarker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:background="#c0e4e4e4">
 
-        <ImageView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_read"/>
+            android:text="&#10004;"
+            android:gravity="center"
+            android:fontFamily="fonts/Roboto-Regular.ttf"
+            android:bufferType="spannable"
+            android:textSize="100sp"
+            android:textColor="@color/white_main_background"
+            />
 
     </FrameLayout>
 </FrameLayout>

@@ -11,6 +11,14 @@
         android:layout_height="match_parent"
         />
 
-    <include layout="@layout/view_float_header" />
+    <include
+        android:id="@+id/floatHeader"
+        layout="@layout/view_float_header" />
+    <View
+        android:id="@+id/headerShadow"
+        android:layout_width="match_parent"
+        android:layout_height="14dip"
+        android:background="@drawable/bg_gradient_bottom_shadow"
+        android:layout_below="@id/floatHeader" />
 
 </RelativeLayout>

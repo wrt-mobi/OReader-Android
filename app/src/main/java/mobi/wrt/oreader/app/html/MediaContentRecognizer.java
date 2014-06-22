@@ -151,9 +151,14 @@ public class MediaContentRecognizer {
         for (String source : sources) {
             if (!StringUtil.isEmpty(source)) {
                 Document summaryDocument = Jsoup.parse(source);
-                Elements imgs = summaryDocument.select("img[height]");
+                Elements imgs = summaryDocument.select("img[src]");
                 if (imgs != null && imgs.size() > 0) {
-                    stringBuilder.append(imgs.toString());
+                    for (Element element : imgs) {
+                        String src = element.attr("src");
+                        if (src.endsWith(".png") || src.endsWith(".jpg") || src.endsWith(".jpeg")  || src.endsWith(".gif")) {
+                            stringBuilder.append(element.toString());
+                        }
+                    }
                 }
                 if (withVideo) {
                     List<String> urls = extractUrls(source);

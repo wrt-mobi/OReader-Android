@@ -26,6 +26,7 @@ import mobi.wrt.oreader.app.clients.twitter.TwitterRequestHelper;
 import mobi.wrt.oreader.app.fragments.ContentsFragment;
 import mobi.wrt.oreader.app.fragments.responders.IContentClick;
 import mobi.wrt.oreader.app.image.Displayers;
+import mobi.wrt.oreader.app.ui.StreamConfig;
 import mobi.wrt.oreader.app.view.utils.SymbolViewUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -37,31 +38,32 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
         UiUtil.setTranslucentBars(this);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_stream);
+        Intent intent = getIntent();
+        String meta = intent.getStringExtra(ClientEntity.META);
+        String type = intent.getStringExtra(ClientEntity.TYPE);
+        String title = intent.getStringExtra(ClientEntity.TITLE);
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            Intent intent = getIntent();
-            String meta = intent.getStringExtra(ClientEntity.META);
-            String type = intent.getStringExtra(ClientEntity.TYPE);
-            String title = intent.getStringExtra(ClientEntity.TITLE);
             fragmentTransaction.
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).
-                    add(R.id.container, ContentsFragment.newInstance(meta, type, title)).
+                    add(R.id.container, ContentsFragment.newInstance(StreamConfig.AdapterType.FULL, meta, type, title)).
                     commit();
-            final View floatHeaderView = findViewById(R.id.header);
-            initHeader(title, meta, floatHeaderView);
-            final ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
-            TwitterRequestHelper.searchProfile(this, title, new ISuccess<String>() {
-                @Override
-                public void success(String s) {
-                    Log.xd(StreamActivity.this, "banner_url: " + s);
-                    if (!StringUtil.isEmpty(s)) {
-                        ImageLoader.getInstance().displayImage(s, headerImageView);
-                    } else {
-                        ImageLoader.getInstance().displayImage("assets://backgrounds/night_2.png", headerImageView);
-                    }
-                }
-            });
         }
+        final View floatHeaderView = findViewById(R.id.floatHeader);
+        initHeader(title, meta, floatHeaderView);
+        final ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
+        TwitterRequestHelper.searchProfile(this, title, new ISuccess<String>() {
+            @Override
+            public void success(String s) {
+                Log.xd(StreamActivity.this, "banner_url: " + s);
+                if (!StringUtil.isEmpty(s)) {
+                    floatHeaderView.findViewById(R.id.twitterTab).setVisibility(View.VISIBLE);
+                    ImageLoader.getInstance().displayImage(s, headerImageView);
+                } else {
+                    ImageLoader.getInstance().displayImage("assets://backgrounds/night_2.png", headerImageView);
+                }
+            }
+        });
     }
 
     private void initHeader(String title, String metaString, View floatHeaderView) {
