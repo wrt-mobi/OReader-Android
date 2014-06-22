@@ -23,8 +23,6 @@
             android:drawSelectorOnTop="true" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/view_float_header" />
-
     <ProgressBar
         android:id="@android:id/progress"
         android:layout_width="wrap_content"

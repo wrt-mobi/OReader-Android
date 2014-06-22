@@ -1,7 +1,6 @@
 package mobi.wrt.oreader.app.fragments;
 
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,35 +9,22 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.Set;
 
 import by.istin.android.xcore.ContextHolder;
-import by.istin.android.xcore.callable.ISuccess;
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.utils.AppUtils;
-import by.istin.android.xcore.utils.Log;
-import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
-import mobi.wrt.oreader.app.clients.feedly.db.Subscriptions;
-import mobi.wrt.oreader.app.clients.twitter.TwitterRequestHelper;
 import mobi.wrt.oreader.app.fragments.responders.IContentClick;
 import mobi.wrt.oreader.app.helpers.ReadUnreadHelper;
-import mobi.wrt.oreader.app.image.Displayers;
 import mobi.wrt.oreader.app.view.ImagesViewGroup;
 import mobi.wrt.oreader.app.view.listeners.FloatHeaderScrollListener;
 import mobi.wrt.oreader.app.view.listeners.SwipeToReadListViewTouchListener;
-import mobi.wrt.oreader.app.view.utils.SymbolViewUtils;
 import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 
 public class ContentsFragment extends XListFragment {
@@ -76,21 +62,11 @@ public class ContentsFragment extends XListFragment {
         final ListView listView = (ListView) view.findViewById(android.R.id.list);
         final View headerView = View.inflate(getActivity(), R.layout.view_fake_header, null);
         listView.addHeaderView(headerView, null, false);
-        final View floatHeaderView = view.findViewById(R.id.header);
-        initHeader(floatHeaderView);
-        final ImageView headerImageView = (ImageView) floatHeaderView.findViewById(R.id.headerBackground);
-        TwitterRequestHelper.searchProfile(view.getContext(), getTitle(), new ISuccess<String>() {
-            @Override
-            public void success(String s) {
-                Log.xd(ContentsFragment.this, "banner_url: " + s);
-                if (!StringUtil.isEmpty(s)) {
-                    ImageLoader.getInstance().displayImage(s, headerImageView);
-                } else {
-                    ImageLoader.getInstance().displayImage("assets://backgrounds/night_2.png", headerImageView);
-                }
-            }
-        });
-        setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, headerHeight, headerHeightMin));
+
+        View floatHeaderView = getActivity().findViewById(R.id.header);
+        if (floatHeaderView != null) {
+            setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, headerHeight, headerHeightMin));
+        }
         TranslucentUtils.applyTranslucentPaddingForView(listView, false, false, true);
         SwipeToReadListViewTouchListener touchListener =
                 new SwipeToReadListViewTouchListener(
@@ -157,44 +133,6 @@ public class ContentsFragment extends XListFragment {
             resultView.findViewById(R.id.readMarker).setVisibility(View.VISIBLE);
         }
         return resultView;
-    }
-
-    private void initHeader(View floatHeaderView) {
-        String title = getTitle();
-        TextView labelView = (TextView) floatHeaderView.findViewById(R.id.label);
-        labelView.setText(title.substring(1));
-        ((TextView) floatHeaderView.findViewById(R.id.symbol)).setText(title.substring(0, 1));
-
-        Uri meta = getMeta();
-        String encode = meta.getQueryParameter(Subscriptions.WEBSITE);
-        Uri parse = Uri.parse(encode);
-        String uri = parse.getScheme() + "://"+parse.getHost() +"/favicon.ico";
-        ImageView imageView = (ImageView) floatHeaderView.findViewById(R.id.symbolBg);
-        ImageLoader.getInstance().displayImage(uri, imageView, Displayers.BITMAP_DISPLAYER_ICON_BG, new SimpleImageLoadingListener() {
-
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
-                view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
-                view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                SymbolViewUtils.updateTextColor(view, loadedImage);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-
-        });
     }
 
     @Override
