@@ -1,6 +1,7 @@
 package mobi.wrt.oreader.app;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -136,6 +137,14 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClientEntityClick(View view) {
+        ContentValues contentValues = (ContentValues) view.getTag();
+        String meta = contentValues.getAsString(ClientEntity.META);
+        String type = contentValues.getAsString(ClientEntity.TYPE);
+        String title = contentValues.getAsString(ClientEntity.TITLE);
+        onClientEntityClick(meta, type, title);
     }
 
     @Override

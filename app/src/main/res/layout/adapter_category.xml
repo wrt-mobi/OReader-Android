@@ -13,6 +13,7 @@
         android:singleLine="true"
         android:ellipsize="end"
         android:textSize="22sp"
+        android:textColor="@color/default_black"
         android:fontFamily="fonts/RobotoCondensed-Bold.ttf"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -25,5 +26,14 @@
         android:layout_toRightOf="@id/label"
         style="@style/Counts"/>
 
+    <ImageView
+        android:id="@+id/moveToCategory"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_action_category"
+        android:onClick="onClientEntityClick"/>
 
 </RelativeLayout>

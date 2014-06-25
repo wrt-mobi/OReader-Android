@@ -391,6 +391,13 @@ public class HomeFragmentExpandableListView extends XFragment {
                 TextView countsView = (TextView) convertView.findViewById(R.id.counts);
                 countsView.setText(item.getString(ClientEntity.COUNT_AS_STRING));
                 labelView.setMaxWidth(mListView.getWidth() - countsView.getWidth() - mListView.getPaddingLeft() - mListView.getPaddingRight());
+
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(ClientEntity.TITLE, item.getString(ClientEntity.TITLE));
+                contentValues.put(ClientEntity.META, item.getString(ClientEntity.META));
+                contentValues.put(ClientEntity.TYPE, item.getString(ClientEntity.TYPE));
+                convertView.findViewById(R.id.moveToCategory).setTag(contentValues);
+
             } else {
                 initChild(convertView, item.getString(ClientEntity.TITLE), item.getString(ClientEntity.META), item.getString(ClientEntity.COUNT_AS_STRING));
             }

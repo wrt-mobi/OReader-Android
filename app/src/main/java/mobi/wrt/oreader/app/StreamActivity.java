@@ -73,34 +73,38 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
 
         Uri meta = Uri.parse(metaString);
         String encode = meta.getQueryParameter(Subscriptions.WEBSITE);
-        Uri parse = Uri.parse(encode);
-        String uri = parse.getScheme() + "://"+parse.getHost() +"/favicon.ico";
-        ImageView imageView = (ImageView) floatHeaderView.findViewById(R.id.symbolBg);
-        ImageLoader.getInstance().displayImage(uri, imageView, Displayers.BITMAP_DISPLAYER_ICON_BG, new SimpleImageLoadingListener() {
+        if (!StringUtil.isEmpty(encode)) {
+            Uri parse = Uri.parse(encode);
+            String uri = parse.getScheme() + "://" + parse.getHost() + "/favicon.ico";
+            ImageView imageView = (ImageView) floatHeaderView.findViewById(R.id.symbolBg);
+            ImageLoader.getInstance().displayImage(uri, imageView, Displayers.BITMAP_DISPLAYER_ICON_BG, new SimpleImageLoadingListener() {
 
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
-                view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
-            }
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+                    view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
+                }
 
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
-                view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
-            }
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    SymbolViewUtils.updateTextColor(view, SymbolViewUtils.DEFAULT_COLOR);
+                    view.setBackgroundColor(SymbolViewUtils.DEFAULT_COLOR);
+                }
 
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                SymbolViewUtils.updateTextColor(view, loadedImage);
-            }
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    SymbolViewUtils.updateTextColor(view, loadedImage);
+                }
 
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
 
-            }
+                }
 
-        });
+            });
+        } else {
+            //TODO make something for group
+        }
     }
 
     @Override
