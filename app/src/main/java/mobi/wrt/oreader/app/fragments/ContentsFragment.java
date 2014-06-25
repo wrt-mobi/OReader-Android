@@ -4,9 +4,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
@@ -66,13 +68,14 @@ public class ContentsFragment extends XListFragment {
     public void onViewCreated(View view) {
         super.onViewCreated(view);
         final ListView listView = (ListView) view.findViewById(android.R.id.list);
-        final View headerView = View.inflate(getActivity(), R.layout.view_fake_header, null);
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        final View headerView = View.inflate(activity, R.layout.view_fake_header, null);
         listView.addHeaderView(headerView, null, false);
 
-        View floatHeaderView = getActivity().findViewById(R.id.floatHeader);
-        View floatHeaderShadowView = getActivity().findViewById(R.id.headerShadow);
+        View floatHeaderView = activity.findViewById(R.id.floatHeader);
+        View floatHeaderShadowView = activity.findViewById(R.id.headerShadow);
         if (floatHeaderView != null && floatHeaderShadowView != null) {
-            setOnScrollListViewListener(new FloatHeaderScrollListener(headerView, floatHeaderView, floatHeaderShadowView, headerHeight, headerHeightMin));
+            setOnScrollListViewListener(new FloatHeaderScrollListener(activity, headerView, floatHeaderView, floatHeaderShadowView, headerHeight, headerHeightMin));
         }
         TranslucentUtils.applyTranslucentPaddingForView(listView, false, false, true);
         SwipeToReadListViewTouchListener touchListener =

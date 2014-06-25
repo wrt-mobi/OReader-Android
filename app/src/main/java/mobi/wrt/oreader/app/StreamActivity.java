@@ -3,11 +3,15 @@ package mobi.wrt.oreader.app;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +40,14 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UiUtil.setTranslucentBars(this);
-        getSupportActionBar().hide();
+        ActionBar supportActionBar = getSupportActionBar();
+        supportActionBar.setTitle(StringUtil.EMPTY);
+        supportActionBar.setIcon(android.R.color.transparent);
+        Drawable transparentDrawable = getResources().getDrawable(android.R.color.transparent);
+        supportActionBar.setBackgroundDrawable(transparentDrawable);
+        supportActionBar.setSplitBackgroundDrawable(transparentDrawable);
+        supportActionBar.setStackedBackgroundDrawable(transparentDrawable);
+        //supportActionBar.hide();
         setContentView(R.layout.activity_stream);
         Intent intent = getIntent();
         String meta = intent.getStringExtra(ClientEntity.META);
@@ -64,6 +75,24 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_stream, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.mark_all_as_read) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initHeader(String title, String metaString, View floatHeaderView) {

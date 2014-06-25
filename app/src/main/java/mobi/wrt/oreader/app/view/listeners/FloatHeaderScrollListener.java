@@ -1,5 +1,7 @@
 package mobi.wrt.oreader.app.view.listeners;
 
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,14 +23,17 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
 
     private int headerHeight;
 
-    private int headerHeightMin;
+    private int mHeaderHeightMin;
 
-    public FloatHeaderScrollListener(View listViewHeaderFakeView, View floatHeaderView, View floatHeaderShadowView, int headerHeight, int headerHeightMin) {
+    private ActionBar mActionBar;
+
+    public FloatHeaderScrollListener(ActionBarActivity actionBarActivity, View listViewHeaderFakeView, View floatHeaderView, View floatHeaderShadowView, int headerHeight, int headerHeightMin) {
         this.listViewHeaderFakeView = listViewHeaderFakeView;
         this.headerHeight = headerHeight;
-        this.headerHeightMin = headerHeightMin;
+        this.mHeaderHeightMin = headerHeightMin;
         this.floatHeaderView = floatHeaderView;
         this.floatHeaderShadowView = floatHeaderShadowView;
+        this.mActionBar = actionBarActivity.getSupportActionBar();
     }
 
     @Override
@@ -51,30 +56,45 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
                     int topMargin = firstVisibleItem == 0 ? -(headerHeight - bottomValue) : -headerHeight;
                     if (isShortVariantShown && topMargin < currentTopMargin) {
                         floatHeaderShadowView.setVisibility(View.VISIBLE);
+                        if (!mActionBar.isShowing()) {
+                            mActionBar.show();
+                        }
                         return;
                     }
                     isShortVariantShown = false;
                     updateHeaderMargin(topMargin, false);
                     floatHeaderShadowView.setVisibility(View.GONE);
+                    if (!mActionBar.isShowing()) {
+                        mActionBar.show();
+                    }
                 } else {
                     //header is not visible can ignore or hide if shown short variant of header
                     if (isShortVariantShown && lastVisibleItem == firstVisibleItem) {
                         floatHeaderShadowView.setVisibility(View.VISIBLE);
+                        if (!mActionBar.isShowing()) {
+                            mActionBar.show();
+                        }
                         return;
                     }
                     floatHeaderShadowView.setVisibility(View.GONE);
                     isShortVariantShown = false;
                     int topMargin = -headerHeight;
                     updateHeaderMargin(topMargin, true);
+                    if (mActionBar.isShowing()) {
+                        mActionBar.hide();
+                    }
                 }
             } else {
                 //scroll to top
                 if (firstVisibleItem > 0) {
                     //show short variant
                     isShortVariantShown = true;
-                    int topMargin = headerHeightMin - headerHeight;
+                    int topMargin = mHeaderHeightMin - headerHeight;
                     updateHeaderMargin(topMargin, true);
                     floatHeaderShadowView.setVisibility(View.VISIBLE);
+                    if (!mActionBar.isShowing()) {
+                        mActionBar.show();
+                    }
                 } else {
                     //full header visible
                     int bottom = listViewHeaderFakeView.getBottom();
@@ -82,11 +102,17 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
                     int topMargin = firstVisibleItem == 0 ? -(headerHeight - bottomValue) : -headerHeight;
                     if (isShortVariantShown && topMargin < currentTopMargin) {
                         floatHeaderShadowView.setVisibility(View.VISIBLE);
+                        if (!mActionBar.isShowing()) {
+                            mActionBar.show();
+                        }
                         return;
                     }
                     isShortVariantShown = false;
                     updateHeaderMargin(topMargin, false);
                     floatHeaderShadowView.setVisibility(View.GONE);
+                    if (mActionBar.isShowing()) {
+                        mActionBar.hide();
+                    }
                 }
             }
         } finally {
@@ -106,7 +132,7 @@ public class FloatHeaderScrollListener implements AbsListView.OnScrollListener {
                 currentAnimation = null;
             }
             int abs = Math.abs(currentTopMargin + (-newTopMargin));
-            if (!isAnimate || abs < headerHeightMin) {
+            if (!isAnimate || abs < mHeaderHeightMin) {
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) floatHeaderView.getLayoutParams();
                 layoutParams.topMargin = newTopMargin;
                 floatHeaderView.setLayoutParams(layoutParams);
