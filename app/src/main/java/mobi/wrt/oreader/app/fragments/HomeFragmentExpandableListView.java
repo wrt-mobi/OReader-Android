@@ -137,7 +137,17 @@ public class HomeFragmentExpandableListView extends XFragment {
                 if (mListView.isGroupExpanded(groupPosition)) {
                     mListView.collapseGroupWithAnimation(groupPosition);
                 } else {
-                    mListView.expandGroupWithAnimation(groupPosition);
+                    ExpandableCursorModel cursorModel = mAdapter.getGroup(groupPosition);
+                    Integer rate = cursorModel.getInt(ClientEntity.RATE);
+                    boolean isFolder = rate == ClientEntity.Rate.FOLDER.ordinal();
+                    if (!isFolder) {
+                        String meta = cursorModel.getString(ClientEntity.META);
+                        String type = cursorModel.getString(ClientEntity.TYPE);
+                        String title = cursorModel.getString(ClientEntity.TITLE);
+                        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type, title);
+                    } else {
+                        mListView.expandGroupWithAnimation(groupPosition);
+                    }
                 }
                 return true;
             }
