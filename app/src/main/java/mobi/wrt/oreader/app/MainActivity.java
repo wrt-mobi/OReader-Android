@@ -1,6 +1,7 @@
 package mobi.wrt.oreader.app;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +11,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.v4.support.internal.text.TypefaceSpan;
+
 import by.istin.android.xcore.utils.UiUtil;
+import mobi.wrt.oreader.app.application.Application;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.HomeFragmentExpandableListView;
 import mobi.wrt.oreader.app.fragments.HomeFragmentMagazine;
@@ -54,6 +61,7 @@ public class MainActivity extends ActionBarActivity
 
         UiUtil.setTranslucentNavigation(this);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setIcon(null);
         TranslucentUtils.applyTranslucentPaddingForView((ViewGroup)findViewById(R.id.container), true, true, false);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -122,7 +130,13 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+
+
+        SpannableString s = new SpannableString(mTitle.toString().toUpperCase());
+        s.setSpan(new TypefaceSpan(this, Application.DEFAULT_FONT_AB), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        actionBar.setTitle(s);
     }
 
 
@@ -175,11 +189,21 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onClientEntityClick(String meta, String type, String title) {
+    public void onClientEntityClick(View v, String icon, String meta, String type, String title) {
         Intent intent = new Intent(this, StreamActivity.class);
+        //Intent intent = new Intent(this, AmazingActivity.class);
         intent.putExtra(ClientEntity.META, meta);
         intent.putExtra(ClientEntity.TYPE, type);
         intent.putExtra(ClientEntity.TITLE, title);
+        intent.putExtra(ClientEntity.ICON, icon);
+        ImageView view = (ImageView) v.findViewById(R.id.icon);
+        if (view != null) {
+            ((ViewGroup) view.getParent()).setTransitionGroup(false);
+            ActivityOptions options =
+                    ActivityOptions.makeSceneTransitionAnimation(this, view, "photo_hero");
+            startActivity(intent, options.toBundle());
+            return;
+        }
         startActivity(intent);
     }
 

@@ -62,6 +62,7 @@ public class HomeFragmentExpandableListView extends XFragment {
             return arguments.getBoolean(UNREAD);
         }
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +79,11 @@ public class HomeFragmentExpandableListView extends XFragment {
                 update(true);
             }
         });
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        swipeLayout.setColorSchemeResources(
+                R.color.loading_progress_1,
+                R.color.loading_progress_2,
+                R.color.loading_progress_3,
+                R.color.loading_progress_4);
     }
 
     @Override
@@ -150,7 +152,7 @@ public class HomeFragmentExpandableListView extends XFragment {
                 String meta = contentValues.getAsString(ClientEntity.META);
                 String type = contentValues.getAsString(ClientEntity.TYPE);
                 String title = contentValues.getAsString(ClientEntity.TITLE);
-                findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type, title);
+                findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(v, null, meta, type, title);
                 return true;
             }
         });

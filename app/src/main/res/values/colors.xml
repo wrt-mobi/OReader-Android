@@ -4,4 +4,13 @@
 
     <color name="default_black">#333333</color>
 
+    <color name="ab">#03a9f4</color>
+
+    <color name="loading_progress_1">#4fc3f7</color>
+    <color name="loading_progress_2">#03a9f4</color>
+    <color name="loading_progress_3">#0288d1</color>
+    <color name="loading_progress_4">#01579b</color>
+
+    <color name="ab_text">#ffffff</color>
+
 </resources>

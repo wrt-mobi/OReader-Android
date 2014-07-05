@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 'android-L'
-    buildToolsVersion "20.0.0"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 'android-L'
+        targetSdkVersion 'L'
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
         buildConfigField "String", "FEEDLY_BASE_PATH", FEEDLY_BASE_PATH

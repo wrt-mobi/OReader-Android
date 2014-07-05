@@ -8,6 +8,27 @@
     <style name="WhiteAppTheme" parent="@style/AppTheme">
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white_main_background</item>
+
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="MyActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/ab</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/ab</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/ab_text</item>
     </style>
 
     <style name="Counts">

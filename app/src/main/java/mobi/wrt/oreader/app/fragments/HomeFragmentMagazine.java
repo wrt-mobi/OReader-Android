@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +20,18 @@ import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
 import mobi.wrt.oreader.app.image.Displayers;
+import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 
 public class HomeFragmentMagazine extends XListFragment {
 
+    private boolean isUnread() {
+        Bundle arguments = getArguments();
+        if (arguments == null) {
+            return false;
+        } else {
+            return arguments.getBoolean(HomeFragmentExpandableListView.UNREAD);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +42,7 @@ public class HomeFragmentMagazine extends XListFragment {
     @Override
     public void onViewCreated(View view) {
         super.onViewCreated(view);
+        TranslucentUtils.applyTranslucentPaddingForView((android.view.ViewGroup) view.findViewById(android.R.id.list), false, false, true);
     }
 
     @Override
@@ -39,7 +50,15 @@ public class HomeFragmentMagazine extends XListFragment {
         String meta = CursorUtils.getString(ClientEntity.META, cursor);
         String type = CursorUtils.getString(ClientEntity.TYPE, cursor);
         String title = CursorUtils.getString(ClientEntity.TITLE, cursor);
-        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type, title);
+        String icon = CursorUtils.getString(ClientEntity.ICON, cursor);
+        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(v, icon, meta, type, title);
+    }
+
+    @Override
+    protected View onAdapterGetView(SimpleCursorAdapter simpleCursorAdapter, int position, View view) {
+        View resultView = super.onAdapterGetView(simpleCursorAdapter, position, view);
+        //resultView.setViewName("photo"+position);
+        return resultView;
     }
 
     @Override
@@ -60,6 +79,14 @@ public class HomeFragmentMagazine extends XListFragment {
     @Override
     public String getProcessorKey() {
         return null;
+    }
+
+    @Override
+    public String getSelection() {
+        if (isUnread()) {
+            return ClientEntity.COUNT + " > 0";
+        }
+        return super.getSelection();
     }
 
     @Override

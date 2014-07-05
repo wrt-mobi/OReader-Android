@@ -24,6 +24,24 @@ import mobi.wrt.oreader.app.clients.flickr.processor.PhotosSearchProcessor;
 
 public class CustomImageDownloader extends BaseImageDownloader {
 
+    public static final String[] ASSETS_THUBS = {
+        "assets://backgrounds/airport.png",
+        "assets://backgrounds/club.png",
+        "assets://backgrounds/concert_croud.png",
+        "assets://backgrounds/croud.png",
+        "assets://backgrounds/day_1.png",
+        "assets://backgrounds/day_2.png",
+        "assets://backgrounds/evening_1.png",
+        "assets://backgrounds/evening_2.png",
+        "assets://backgrounds/livingroom.png",
+        "assets://backgrounds/morning_1.png",
+        "assets://backgrounds/morning_2.png",
+        "assets://backgrounds/night_1.png",
+        "assets://backgrounds/night_2.png",
+        "assets://backgrounds/night_3.png",
+        "assets://backgrounds/street.png"
+    };
+
     public CustomImageDownloader(Context context) {
         super(context);
     }
@@ -51,17 +69,18 @@ public class CustomImageDownloader extends BaseImageDownloader {
             try {
                 Core.get(ContextHolder.get()).executeSync(executeOperationBuilder.build());
             } catch (Exception e) {
-                throw new IOException(e);
+                return getStreamFromAssets(ASSETS_THUBS[new Random().nextInt(ASSETS_THUBS.length-1)], extra);
             }
             if (responseHolder.isNull() || responseHolder.get().getPhotos() == null || responseHolder.get().getPhotos().isEmpty()) {
-                throw new IOException("can't get image from flickr");
+                return getStreamFromAssets(ASSETS_THUBS[new Random().nextInt(ASSETS_THUBS.length-1)], extra);
             }
             List<PhotosSearchProcessor.Response.Photo> photos = responseHolder.get().getPhotos();
             PhotosSearchProcessor.Response.Photo photo = photos.get(new Random().nextInt(photos.size()));
             imageUri = StringUtil.format(FlickrApi.Photos.PHOTO_URL, photo.getFarm().toString(), photo.getServer(), photo.getId(), photo.getSecret());
         }
         Log.xd(this, "imgurl:"+imageUri);
-        return super.getStream(imageUri, extra);
+        InputStream stream = super.getStream(imageUri, extra);
+        return stream;
     }
 
 }

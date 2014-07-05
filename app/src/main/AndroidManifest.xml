@@ -45,6 +45,14 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="mobi.wrt.oreader.app.AmazingActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="mobi.wrt.oreader.app.AmazingActivity2"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="mobi.wrt.oreader.app.StreamActivity"
             android:label="@string/app_name" >
         </activity>
