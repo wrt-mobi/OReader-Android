@@ -190,15 +190,17 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onClientEntityClick(View v, String icon, String meta, String type, String title) {
-        Intent intent = new Intent(this, StreamActivity.class);
-        //Intent intent = new Intent(this, AmazingActivity.class);
+        //Intent intent = new Intent(this, StreamActivity.class);
+        Intent intent = new Intent(this, AmazingActivity.class);
         intent.putExtra(ClientEntity.META, meta);
         intent.putExtra(ClientEntity.TYPE, type);
         intent.putExtra(ClientEntity.TITLE, title);
         intent.putExtra(ClientEntity.ICON, icon);
         ImageView view = (ImageView) v.findViewById(R.id.icon);
         if (view != null) {
-            ((ViewGroup) view.getParent()).setTransitionGroup(false);
+            ViewGroup parent = (ViewGroup) view.getParent();
+            parent.setTransitionGroup(false);
+            ((ViewGroup)parent.getParent()).setTransitionGroup(false);
             ActivityOptions options =
                     ActivityOptions.makeSceneTransitionAnimation(this, view, "photo_hero");
             startActivity(intent, options.toBundle());

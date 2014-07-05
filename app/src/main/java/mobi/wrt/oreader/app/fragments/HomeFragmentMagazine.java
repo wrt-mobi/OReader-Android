@@ -57,7 +57,7 @@ public class HomeFragmentMagazine extends XListFragment {
     @Override
     protected View onAdapterGetView(SimpleCursorAdapter simpleCursorAdapter, int position, View view) {
         View resultView = super.onAdapterGetView(simpleCursorAdapter, position, view);
-        //resultView.setViewName("photo"+position);
+        resultView.findViewById(R.id.icon).setViewName("photo"+position);
         return resultView;
     }
 
