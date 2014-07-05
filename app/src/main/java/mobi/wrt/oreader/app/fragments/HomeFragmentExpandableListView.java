@@ -44,7 +44,7 @@ public class HomeFragmentExpandableListView extends XFragment {
     private AnimatedExpandableListView mListView;
     private ExpandableListAdapter mAdapter;
 
-    private static final String UNREAD = "extra_unread";
+    public static final String UNREAD = "extra_unread";
 
     public static Fragment newInstance(boolean unread) {
         Fragment fragment = new HomeFragmentExpandableListView();

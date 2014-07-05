@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -19,8 +20,10 @@ import android.widget.TextView;
 import by.istin.android.xcore.utils.UiUtil;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.HomeFragmentExpandableListView;
+import mobi.wrt.oreader.app.fragments.HomeFragmentMagazine;
 import mobi.wrt.oreader.app.fragments.NavigationDrawerFragment;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
+import mobi.wrt.oreader.app.utils.PreferenceUtils;
 import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -39,9 +42,16 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private PreferenceUtils.HomeViewType mHomeViewType;
+
+    private boolean isHideRead;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHomeViewType = PreferenceUtils.getHomeViewType();
+        isHideRead = PreferenceUtils.isHideRead();
+
         UiUtil.setTranslucentNavigation(this);
         setContentView(R.layout.activity_main);
         TranslucentUtils.applyTranslucentPaddingForView((ViewGroup)findViewById(R.id.container), true, true, false);
@@ -64,15 +74,18 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment oldFragment = fragmentManager.findFragmentById(R.id.container);
         switch (position) {
             case 0:
-                if (oldFragment != null && oldFragment instanceof HomeFragmentExpandableListView) {
-                    return;
-                } else {
+                if (mHomeViewType == PreferenceUtils.HomeViewType.GRID) {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(true))
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .replace(R.id.container, HomeFragmentMagazine.newInstance(isHideRead))
                             .commit();
+                } else if (mHomeViewType == PreferenceUtils.HomeViewType.LIST) {
+                    fragmentManager.beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(isHideRead))
+                        .commit();
                 }
                 break;
             case 1:
@@ -119,7 +132,12 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            if (mHomeViewType == PreferenceUtils.HomeViewType.GRID) {
+                getMenuInflater().inflate(R.menu.home_grid, menu);
+            } else if (mHomeViewType == PreferenceUtils.HomeViewType.LIST) {
+                getMenuInflater().inflate(R.menu.home_list, menu);
+            }
+            menu.findItem(R.id.action_unread_visibility).setChecked(isHideRead);
             restoreActionBar();
             return true;
         }
@@ -133,6 +151,24 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_view_type) {
+            if (mHomeViewType == PreferenceUtils.HomeViewType.GRID) {
+                mHomeViewType = PreferenceUtils.HomeViewType.LIST;
+            } else {
+                mHomeViewType = PreferenceUtils.HomeViewType.GRID;
+            }
+            PreferenceUtils.setHomeViewType(mHomeViewType);
+            onNavigationDrawerItemSelected(0);
+            supportInvalidateOptionsMenu();
+            return true;
+        }
+        if (id == R.id.action_unread_visibility) {
+            isHideRead = !isHideRead;
+            PreferenceUtils.setHideRead(isHideRead);
+            onNavigationDrawerItemSelected(0);
+            item.setChecked(isHideRead);
             return true;
         }
         return super.onOptionsItemSelected(item);

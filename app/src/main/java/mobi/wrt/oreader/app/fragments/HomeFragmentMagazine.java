@@ -3,6 +3,7 @@ package mobi.wrt.oreader.app.fragments;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -102,4 +103,11 @@ public class HomeFragmentMagazine extends XListFragment {
         return R.layout.adapter_home_grid;
     }
 
+    public static Fragment newInstance(boolean isHideRead) {
+        Fragment fragment = new HomeFragmentMagazine();
+        Bundle args = new Bundle();
+        args.putBoolean(HomeFragmentExpandableListView.UNREAD, isHideRead);
+        fragment.setArguments(args);
+        return fragment;
+    }
 }
