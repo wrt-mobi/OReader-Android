@@ -2,8 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="mobi.wrt.oreader.app.MainActivity" >
-    <item android:id="@+id/mark_all_as_read"
-        android:title="@string/action_unread_visibility"
+    <item android:id="@+id/action_stream_config"
+        android:title="@string/action_stream_config"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_all_as_read"
+        android:title="@string/action_all_as_read"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

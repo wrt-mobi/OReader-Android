@@ -21,6 +21,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import by.istin.android.xcore.callable.ISuccess;
+import by.istin.android.xcore.ui.DialogBuilder;
 import by.istin.android.xcore.utils.Log;
 import by.istin.android.xcore.utils.StringUtil;
 import by.istin.android.xcore.utils.UiUtil;
@@ -89,7 +90,10 @@ public class StreamActivity extends ActionBarActivity implements IContentClick {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.mark_all_as_read) {
+        if (id == R.id.action_all_as_read) {
+            return true;
+        }
+        if (id == R.id.action_stream_config) {
             return true;
         }
         return super.onOptionsItemSelected(item);

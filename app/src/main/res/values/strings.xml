@@ -20,6 +20,8 @@
 
     <string name="action_style">List</string>
     <string name="action_unread_visibility">Hide read</string>
+    <string name="action_all_as_read">Mark all as read</string>
+    <string name="action_stream_config">Config stream</string>
     <string name="title_activity_wizard">WizardActivity</string>
 
 
