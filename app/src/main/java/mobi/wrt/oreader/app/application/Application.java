@@ -27,11 +27,16 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class Application extends CoreApplication {
 
+    public static final String FONTS_FOLDER = "fonts/";
+    public static final String DEFAULT_FONT = "Roboto-Light.ttf";
+    public static final String DEFAULT_FONT_AB = "RobotoCondensed-Bold.ttf";
+    public static final String DEFAULT_FONT_PATH = FONTS_FOLDER + DEFAULT_FONT;
+
     @Override
     public void onCreate() {
         super.onCreate();
         L.disableLogging();
-        CalligraphyConfig.initDefault("fonts/Roboto-Light.ttf");
+        CalligraphyConfig.initDefault(DEFAULT_FONT_PATH);
         registerAppService(new HttpAndroidDataSource(
                         new HttpAndroidDataSource.DefaultHttpRequestBuilder(),
                         new HttpAndroidDataSource.DefaultResponseStatusHandler())

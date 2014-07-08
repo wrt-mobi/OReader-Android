@@ -18,7 +18,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_style">List</string>
+    <string name="action_style_list">List</string>
+    <string name="action_style_grid">Grid</string>
     <string name="action_unread_visibility">Hide read</string>
     <string name="action_all_as_read">Mark all as read</string>
     <string name="action_stream_config">Config stream</string>

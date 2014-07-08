@@ -1,14 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_card"
-        >
 
         <mobi.wrt.oreader.app.view.SquareImageView
             android:id="@+id/icon"
@@ -16,19 +10,20 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"/>
 
-        <mobi.wrt.oreader.app.view.ScaleTextView
+        <TextView
             android:id="@+id/label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dip"
+            android:maxLines="4"
             android:layout_centerHorizontal="true"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:paddingLeft="8dip"
             android:paddingRight="8dip"
             android:gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:textColor="@android:color/white"/>
 
         <TextView
@@ -46,10 +41,7 @@
             android:textSize="22sp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_counts"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/clientType"
-            android:layout_marginTop="8dp"
+            android:layout_centerInParent="true"
             />
 
-    </RelativeLayout>
-</FrameLayout>
+</RelativeLayout>

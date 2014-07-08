@@ -6,9 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
-import com.paveldudka.util.FastBlur;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -19,12 +19,13 @@ public class Displayers {
             .resetViewBeforeLoading(true)
             .delayBeforeLoading(300)
             .cacheInMemory(true)
-            .cacheOnDisc(true)
+            .cacheOnDisk(true)
             .displayer(new SimpleBitmapDisplayer())
             .build();
 
     public static DisplayImageOptions BITMAP_DISPLAYER_BLUR_OPTIONS = new DisplayImageOptions.Builder().cloneFrom(BITMAP_DISPLAYER_OPTIONS)
-            .preProcessor(new BitmapProcessor() {
+            .displayer(new FadeInBitmapDisplayer(300, true, true, false))
+            /*.preProcessor(new BitmapProcessor() {
                 @Override
                 public Bitmap process(Bitmap bitmap) {
                     if (bitmap == null) {
@@ -32,12 +33,13 @@ public class Displayers {
                     }
                     return FastBlur.doBlur(bitmap, 50, false);
                 }
-            })
+            })*/
             .build();
 
     public static DisplayImageOptions BITMAP_DISPLAYER_ICON_BG = new DisplayImageOptions.Builder().cloneFrom(BITMAP_DISPLAYER_OPTIONS)
             .cacheInMemory(true)
             .cacheOnDisc(true)
+            .displayer(new FadeInBitmapDisplayer(300, true, true, false))
             .preProcessor(new BitmapProcessor() {
                 @Override
                 public Bitmap process(Bitmap bitmap) {

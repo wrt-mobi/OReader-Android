@@ -2,26 +2,36 @@ package mobi.wrt.oreader.app;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.v4.support.internal.text.TypefaceSpan;
+
 import by.istin.android.xcore.utils.UiUtil;
+import mobi.wrt.oreader.app.application.Application;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.HomeFragmentExpandableListView;
+import mobi.wrt.oreader.app.fragments.HomeFragmentMagazine;
 import mobi.wrt.oreader.app.fragments.NavigationDrawerFragment;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
+import mobi.wrt.oreader.app.utils.PreferenceUtils;
 import mobi.wrt.oreader.app.view.utils.TranslucentUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -40,11 +50,19 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private PreferenceUtils.HomeViewType mHomeViewType;
+
+    private boolean isHideRead;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHomeViewType = PreferenceUtils.getHomeViewType();
+        isHideRead = PreferenceUtils.isHideRead();
+
         UiUtil.setTranslucentNavigation(this);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setIcon(null);
         TranslucentUtils.applyTranslucentPaddingForView((ViewGroup)findViewById(R.id.container), true, true, false);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -65,15 +83,18 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment oldFragment = fragmentManager.findFragmentById(R.id.container);
         switch (position) {
             case 0:
-                if (oldFragment != null && oldFragment instanceof HomeFragmentExpandableListView) {
-                    return;
-                } else {
+                if (mHomeViewType == PreferenceUtils.HomeViewType.GRID) {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(true))
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .replace(R.id.container, HomeFragmentMagazine.newInstance(isHideRead))
                             .commit();
+                } else if (mHomeViewType == PreferenceUtils.HomeViewType.LIST) {
+                    fragmentManager.beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .replace(R.id.container, HomeFragmentExpandableListView.newInstance(isHideRead))
+                        .commit();
                 }
                 break;
             case 1:
@@ -110,7 +131,13 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+
+
+        SpannableString s = new SpannableString(mTitle.toString().toUpperCase());
+        s.setSpan(new TypefaceSpan(this, Application.DEFAULT_FONT_AB), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        actionBar.setTitle(s);
     }
 
 
@@ -120,7 +147,12 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            if (mHomeViewType == PreferenceUtils.HomeViewType.GRID) {
+                getMenuInflater().inflate(R.menu.home_grid, menu);
+            } else if (mHomeViewType == PreferenceUtils.HomeViewType.LIST) {
+                getMenuInflater().inflate(R.menu.home_list, menu);
+            }
+            menu.findItem(R.id.action_unread_visibility).setChecked(isHideRead);
             restoreActionBar();
             return true;
         }
@@ -136,6 +168,24 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_view_type) {
+            if (mHomeViewType == PreferenceUtils.HomeViewType.GRID) {
+                mHomeViewType = PreferenceUtils.HomeViewType.LIST;
+            } else {
+                mHomeViewType = PreferenceUtils.HomeViewType.GRID;
+            }
+            PreferenceUtils.setHomeViewType(mHomeViewType);
+            onNavigationDrawerItemSelected(0);
+            supportInvalidateOptionsMenu();
+            return true;
+        }
+        if (id == R.id.action_unread_visibility) {
+            isHideRead = !isHideRead;
+            PreferenceUtils.setHideRead(isHideRead);
+            onNavigationDrawerItemSelected(0);
+            item.setChecked(isHideRead);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -148,11 +198,23 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onClientEntityClick(String meta, String type, String title) {
-        Intent intent = new Intent(this, StreamActivity.class);
+    public void onClientEntityClick(View v, String icon, String meta, String type, String title) {
+        //Intent intent = new Intent(this, StreamActivity.class);
+        Intent intent = new Intent(this, AmazingActivity.class);
         intent.putExtra(ClientEntity.META, meta);
         intent.putExtra(ClientEntity.TYPE, type);
         intent.putExtra(ClientEntity.TITLE, title);
+        intent.putExtra(ClientEntity.ICON, icon);
+        ImageView view = (ImageView) v.findViewById(R.id.icon);
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            parent.setTransitionGroup(false);
+            ((ViewGroup)parent.getParent()).setTransitionGroup(false);
+            ActivityOptions options =
+                    ActivityOptions.makeSceneTransitionAnimation(this, view, "photo_hero");
+            startActivity(intent, options.toBundle());
+            return;
+        }
         startActivity(intent);
     }
 

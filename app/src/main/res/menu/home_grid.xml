@@ -2,11 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="mobi.wrt.oreader.app.MainActivity" >
-    <item android:id="@+id/action_example"
-        android:title="@string/action_style"
+    <item android:id="@+id/action_view_type"
+        android:title="@string/action_style_list"
+        android:icon="@drawable/ic_action_collections_view_as_list"
         app:showAsAction="withText|ifRoom" />
     <item android:id="@+id/action_unread_visibility"
         android:title="@string/action_unread_visibility"
         android:orderInCategory="100"
+        android:checkable="true"
         app:showAsAction="never" />
 </menu>
