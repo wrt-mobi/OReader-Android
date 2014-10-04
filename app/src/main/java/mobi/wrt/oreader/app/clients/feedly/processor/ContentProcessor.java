@@ -56,7 +56,7 @@ public class ContentProcessor extends AbstractGsonBatchProcessor<ContentProcesso
 
 
     @Override
-    protected void onProcessingFinish(DataSourceRequest dataSourceRequest, ContentProcessor.Response contentValueses) {
+    protected void onProcessingFinish(DataSourceRequest dataSourceRequest, ContentProcessor.Response contentValueses) throws Exception {
         super.onProcessingFinish(dataSourceRequest, contentValueses);
         notifyChange(getHolderContext(), getClazz());
     }

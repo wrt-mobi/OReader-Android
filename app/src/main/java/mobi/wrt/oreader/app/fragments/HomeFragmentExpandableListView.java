@@ -146,7 +146,7 @@ public class HomeFragmentExpandableListView extends XFragment {
                         String meta = cursorModel.getString(ClientEntity.META);
                         String type = cursorModel.getString(ClientEntity.TYPE);
                         String title = cursorModel.getString(ClientEntity.TITLE);
-                        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(meta, type, title);
+                        findFirstResponderFor(IClientEntityClick.class).onClientEntityClick(v, null, meta, type, title);
                     } else {
                         mListView.expandGroupWithAnimation(groupPosition);
                     }

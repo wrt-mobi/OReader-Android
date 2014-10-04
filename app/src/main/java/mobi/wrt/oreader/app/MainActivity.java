@@ -194,13 +194,13 @@ public class MainActivity extends ActionBarActivity
         String meta = contentValues.getAsString(ClientEntity.META);
         String type = contentValues.getAsString(ClientEntity.TYPE);
         String title = contentValues.getAsString(ClientEntity.TITLE);
-        onClientEntityClick(meta, type, title);
+        onClientEntityClick(view, null, meta, type, title);
     }
 
     @Override
     public void onClientEntityClick(View v, String icon, String meta, String type, String title) {
-        //Intent intent = new Intent(this, StreamActivity.class);
-        Intent intent = new Intent(this, AmazingActivity.class);
+        Intent intent = new Intent(this, StreamActivity.class);
+        //Intent intent = new Intent(this, AmazingActivity.class);
         intent.putExtra(ClientEntity.META, meta);
         intent.putExtra(ClientEntity.TYPE, type);
         intent.putExtra(ClientEntity.TITLE, title);

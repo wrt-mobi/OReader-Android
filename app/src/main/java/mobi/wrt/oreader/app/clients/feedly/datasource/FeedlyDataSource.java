@@ -16,6 +16,7 @@ import by.istin.android.xcore.ContextHolder;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.source.impl.http.HttpAndroidDataSource;
 import by.istin.android.xcore.source.impl.http.exception.IOStatusException;
+import by.istin.android.xcore.utils.Holder;
 import mobi.wrt.oreader.app.clients.AuthManagerFactory;
 import mobi.wrt.oreader.app.clients.feedly.exception.FeedlyAuthException;
 
@@ -48,11 +49,11 @@ public class FeedlyDataSource extends HttpAndroidDataSource {
             }
         }, new DefaultResponseStatusHandler() {
             @Override
-            public void statusHandle(HttpAndroidDataSource dataSource, HttpUriRequest request, HttpResponse response) throws IOStatusException, ParseException, IOException {
+            public void statusHandle(HttpAndroidDataSource dataSource, DataSourceRequest dataSourceRequest, HttpUriRequest request, HttpResponse response, Holder<Boolean> isCached) throws IOStatusException, ParseException, IOException {
                 if (response.getStatusLine().getStatusCode() == 403) {
                     throw new FeedlyAuthException();
                 }
-                super.statusHandle(dataSource, request, response);
+                super.statusHandle(dataSource, dataSourceRequest, request, response, isCached);
             }
         });
     }

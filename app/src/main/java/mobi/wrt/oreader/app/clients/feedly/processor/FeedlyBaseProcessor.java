@@ -24,7 +24,7 @@ abstract class FeedlyBaseProcessor extends AbstractGsonBatchProcessor<ContentVal
     }
 
     @Override
-    protected void onProcessingFinish(DataSourceRequest dataSourceRequest, ContentValues[] contentValueses) {
+    protected void onProcessingFinish(DataSourceRequest dataSourceRequest, ContentValues[] contentValueses) throws Exception {
         super.onProcessingFinish(dataSourceRequest, contentValueses);
         notifyChange(getHolderContext(), getClazz());
     }

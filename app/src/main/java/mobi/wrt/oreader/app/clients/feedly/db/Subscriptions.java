@@ -4,14 +4,16 @@ import android.content.ContentValues;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.SerializedName;
 
-import by.istin.android.xcore.annotations.dbEntities;
+import by.istin.android.xcore.annotations.Config;
+import by.istin.android.xcore.annotations.converter.IConverter;
+import by.istin.android.xcore.annotations.converter.gson.GsonConverter;
 import by.istin.android.xcore.annotations.dbInteger;
 import by.istin.android.xcore.annotations.dbLong;
 import by.istin.android.xcore.annotations.dbString;
 import by.istin.android.xcore.db.IDBConnection;
 import by.istin.android.xcore.db.impl.DBHelper;
-import by.istin.android.xcore.gson.GsonPrimitiveJoinerConverter;
 import by.istin.android.xcore.source.DataSourceRequest;
 import by.istin.android.xcore.utils.StringUtil;
 import mobi.wrt.oreader.app.clients.ClientsFactory;
@@ -41,7 +43,8 @@ public class Subscriptions extends BaseEntity {
     @dbString
     public static final String WEBSITE = "website";
 
-    @dbString
+    @dbString(value = @Config(dbType = Config.DBType.STRING, transformer = Transformer.class))
+    @SerializedName("categories")
     public static final String CATEGORIES_JOINED = "categories_joined";
 
     //LOCAL
@@ -77,38 +80,33 @@ public class Subscriptions extends BaseEntity {
         dbHelper.updateOrInsert(dataSourceRequest, db, ClientEntity.class, clientEntity);
     }
 
-    //TODO refactoring for other converter
-    //only for parsing
-    @dbEntities(clazz = Object.class, jsonConverter = CategoryConverter.class)
-    public static final String CATEGORIES = "categories";
+    public static class Transformer extends Config.AbstractTransformer<GsonConverter.Meta> {
 
-    public static class CategoryConverter extends GsonPrimitiveJoinerConverter {
-
-        @Override
-        public void convert(Params params) {
-            StringBuilder tagsBuilder = new StringBuilder();
-            JsonArray jsonArray = params.getJsonArray();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JsonElement item = jsonArray.get(i);
-                tagsBuilder.append(item.getAsJsonObject().get(Category.LABEL).getAsString());
-                if (i != jsonArray.size()-1) {
-                    tagsBuilder.append(getSplitter());
+        public static final IConverter<GsonConverter.Meta> CONVERTER = new GsonConverter() {
+            @Override
+            public void convert(ContentValues contentValues, String fieldValue, Object parent, Meta meta) {
+                JsonElement jsonValue = meta.getJsonElement();
+                if (jsonValue.isJsonPrimitive()) {
+                    return;
                 }
+                StringBuilder tagsBuilder = new StringBuilder();
+                JsonArray jsonArray = jsonValue.getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JsonElement item = jsonArray.get(i);
+                    tagsBuilder.append(item.getAsJsonObject().get(Category.LABEL).getAsString());
+                    if (i != jsonArray.size()-1) {
+                        tagsBuilder.append(", ");
+                    }
+                }
+                String result = tagsBuilder.toString();
+                contentValues.put(fieldValue, result);
             }
-            String result = tagsBuilder.toString();
-            if (!StringUtil.isEmpty(result)) {
-                params.getContentValues().put(getEntityKey(), result);
-            }
-        }
+        };
 
         @Override
-        public String getSplitter() {
-            return ", ";
+        public IConverter<GsonConverter.Meta> converter() {
+            return CONVERTER;
         }
 
-        @Override
-        public String getEntityKey() {
-            return CATEGORIES_JOINED;
-        }
     }
 }

@@ -204,7 +204,7 @@ public class ContentsFragment extends XListFragment {
     }
 
     @Override
-    protected String[] getAdapterColumns() {
+    public String[] getAdapterColumns() {
         return mContentsFragmentConnector.getAdapterColumns(getAdapterType(), getMeta());
     }
 
@@ -220,7 +220,7 @@ public class ContentsFragment extends XListFragment {
     }
 
     @Override
-    protected int[] getAdapterControlIds() {
+    public int[] getAdapterControlIds() {
         return mContentsFragmentConnector.getAdapterControlIds(getAdapterType());
     }
 
@@ -254,7 +254,7 @@ public class ContentsFragment extends XListFragment {
     }
 
     @Override
-    protected int getAdapterLayout() {
+    public int getAdapterLayout() {
         return getAdapterType().getLayout();
     }
 

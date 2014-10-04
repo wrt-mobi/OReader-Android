@@ -16,6 +16,7 @@ import java.util.Random;
 import by.istin.android.xcore.fragment.XListFragment;
 import by.istin.android.xcore.provider.ModelContract;
 import by.istin.android.xcore.utils.CursorUtils;
+import by.istin.android.xcore.utils.UiUtil;
 import mobi.wrt.oreader.app.R;
 import mobi.wrt.oreader.app.clients.db.ClientEntity;
 import mobi.wrt.oreader.app.fragments.responders.IClientEntityClick;
@@ -57,7 +58,7 @@ public class HomeFragmentMagazine extends XListFragment {
     @Override
     protected View onAdapterGetView(SimpleCursorAdapter simpleCursorAdapter, int position, View view) {
         View resultView = super.onAdapterGetView(simpleCursorAdapter, position, view);
-        resultView.findViewById(R.id.icon).setViewName("photo"+position);
+        UiUtil.setViewName(resultView.findViewById(R.id.icon), "photo"+position);
         return resultView;
     }
 
@@ -111,12 +112,12 @@ public class HomeFragmentMagazine extends XListFragment {
     }
 
     @Override
-    protected String[] getAdapterColumns() {
+    public String[] getAdapterColumns() {
         return new String[]{ClientEntity.ICON, ClientEntity.TITLE, ClientEntity.TYPE, ClientEntity.COUNT_AS_STRING};
     }
 
     @Override
-    protected int[] getAdapterControlIds() {
+    public int[] getAdapterControlIds() {
         return new int[]{R.id.icon, R.id.label, R.id.clientType, R.id.count};
     }
 
@@ -126,7 +127,7 @@ public class HomeFragmentMagazine extends XListFragment {
     }
 
     @Override
-    protected int getAdapterLayout() {
+    public int getAdapterLayout() {
         return R.layout.adapter_home_grid;
     }
 

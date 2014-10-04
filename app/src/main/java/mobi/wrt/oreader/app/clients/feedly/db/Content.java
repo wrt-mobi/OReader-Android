@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import by.istin.android.xcore.ContextHolder;
-import by.istin.android.xcore.annotations.JsonSubJSONObject;
 import by.istin.android.xcore.annotations.dbBoolean;
 import by.istin.android.xcore.annotations.dbLong;
 import by.istin.android.xcore.annotations.dbString;
@@ -43,27 +42,22 @@ public class Content extends BaseEntity {
     public static final String PUBLISHED = "published";
 
     @dbString
-    @JsonSubJSONObject
     @SerializedName("summary:content")
     public static final String SUMMARY_CONTENT = "summary_content";
 
     @dbString
-    @JsonSubJSONObject
     @SerializedName("content:content")
     public static final String CONTENT_CONTENT = "content_content";
 
     @dbString
-    @JsonSubJSONObject
     @SerializedName("visual:url")
     public static final String VISUAL_URL = "visual_url";
 
     @dbString
-    @JsonSubJSONObject
     @SerializedName("visual:height")
     public static final String VISUAL_HEIGHT = "visual_height";
 
     @dbString
-    @JsonSubJSONObject
     @SerializedName("visual:width")
     public static final String VISUAL_WIDTH = "visual_width";
 
